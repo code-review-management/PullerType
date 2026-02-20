@@ -12,6 +12,7 @@ import {
   ViewType,
 } from "react-diff-view";
 
+import { useHighlighting } from "../../_hooks/useHighlighting";
 import { PublishedThreadsByLine } from "../../_hooks/usePublishedThreads";
 import { getCommentWidgets, getLanguage } from "../../_utils/diff-utils";
 import FileDiffHeader from "../FileDiffHeader/FileDiffHeader";
@@ -51,6 +52,8 @@ export default function FileDiffView({
   publishedThreadsByLine: PublishedThreadsByLine;
 }) {
   const [isExpanded, setIsExpanded] = useState(true);
+  const { selectedChanges, highlightEvents } = useHighlighting();
+
   const tokens = tokenize(hunks, {
     highlight: true,
     refractor: refractor,
@@ -76,6 +79,8 @@ export default function FileDiffView({
             hunks={hunks}
             tokens={tokens}
             widgets={widgets}
+            selectedChanges={selectedChanges}
+            {...highlightEvents}
           >
             {(hunks) =>
               hunks.map((hunk) => (
