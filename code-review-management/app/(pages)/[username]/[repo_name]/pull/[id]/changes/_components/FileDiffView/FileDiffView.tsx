@@ -1,5 +1,5 @@
 import refractor from "refractor";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 import { Roboto_Mono } from "next/font/google";
 import {
@@ -12,6 +12,7 @@ import {
   ViewType,
 } from "react-diff-view";
 
+import { Drafts } from "../../_hooks/useDrafts";
 import { useHighlighting } from "../../_hooks/useHighlighting";
 import { PublishedThreadsByLine } from "../../_hooks/usePublishedThreads";
 import { getCommentWidgets, getLanguage } from "../../_utils/diff-utils";
@@ -41,6 +42,8 @@ export default function FileDiffView({
   viewType,
   hunks,
   publishedThreadsByLine,
+  drafts,
+  setDrafts,
 }: {
   oldRevision: string;
   newRevision: string;
@@ -50,6 +53,8 @@ export default function FileDiffView({
   viewType: ViewType;
   hunks: HunkData[];
   publishedThreadsByLine: PublishedThreadsByLine;
+  drafts: Drafts;
+  setDrafts: Dispatch<SetStateAction<Drafts>>
 }) {
   const [isExpanded, setIsExpanded] = useState(true);
   const { selectedChanges, highlightEvents } = useHighlighting();
