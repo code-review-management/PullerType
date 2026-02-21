@@ -36,6 +36,15 @@
     border-right-color: var(--diff-omit-bg-color);
 }
 
+.diff-gutter:has(.highlighted) {
+    background-color: var(--diff-gutter-highlight-bg-color);
+    border-right: var(--border-thin-width) solid var(--diff-gutter-highlight-border-color);
+}
+
+.diff-gutter:has(.highlighted) + .diff-code {
+    background-color: var(--diff-code-highlight-bg-color);
+}
+
 .diff-line .diff-code:nth-child(2) {
     border-right: var(--border-thin-width) solid var(--border-gray);
 }
