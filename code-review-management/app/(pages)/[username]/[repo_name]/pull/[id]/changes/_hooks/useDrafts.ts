@@ -5,7 +5,7 @@ import { useState } from "react";
  * yet published to GitHub. Using the highlight functionality generates a draft
  * for a NEW thread.
  *
- * Currently supports only "line" subject types, not files.
+ * Supports only "line" subject types, not files.
  *
  * TODO: Handle reply drafts when responding to an already published thread.
  * Create a new hook for handling replies.
@@ -18,16 +18,17 @@ export type Drafts = Map<FileName, DraftsByLine>;
 export type DraftsByLine = Map<LineNumber, DraftsBySide>;
 
 export interface DraftsBySide {
-  left: Draft;
-  right: Draft;
+  left?: DraftItem;
+  right?: DraftItem;
 }
 
-export interface Draft {
+export interface DraftItem {
   path: string;
   body: string;
   startLine: number;
   endLine: number;
   side: "left" | "right";
+  createdAt: string;
 }
 
 export function useDrafts() {
