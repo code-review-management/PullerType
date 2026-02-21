@@ -27,12 +27,15 @@
     --diff-decoration-bg-color: #e2f4ff;
     --diff-code-delete-bg-color: #fdeff0;
     --diff-code-insert-bg-color: #eaffee;
+    --diff-code-highlight-bg-color: #fffdd5;
 
     --diff-gutter-font-color: #5e5e5e;
     --diff-gutter-delete-bg-color: #fadde0;
     --diff-gutter-delete-border-color: #eca7a7;
     --diff-gutter-insert-bg-color: #d6fedb;
     --diff-gutter-insert-border-color: #93de7a;
+    --diff-gutter-highlight-bg-color: #fffbac;
+    --diff-gutter-highlight-border-color: #ffea48;
 
     /* Diff state colors */
     --state-draft: #989898;
