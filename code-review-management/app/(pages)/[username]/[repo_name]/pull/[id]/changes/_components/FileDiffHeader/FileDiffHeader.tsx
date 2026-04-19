@@ -4,6 +4,7 @@ import { FileData } from "react-diff-view";
 import { FileDiff } from "@/types/github.types";
 import ChevronDownIcon from "@/public/icons/chevron_down.svg";
 import ChevronRightIcon from "@/public/icons/chevron_right.svg";
+import CommentIcon from "@/public/icons/comment.svg";
 import FileStatusChip from "../FileStatusChip/FileStatusChip";
 import styles from "./FileDiffHeader.module.css";
 
@@ -26,34 +27,39 @@ export default function FileDiffHeader({
     <div
       className={`${styles.fileDiffHeader} ${!isExpanded ? styles.collapsed : ""}`}
     >
-      <Image
-        src={isExpanded ? ChevronDownIcon : ChevronRightIcon}
-        alt={`Chevron icon pointing ${isExpanded ? "down" : "right"}`}
-        className={styles.chevron}
-        onClick={() => setIsExpanded((prev) => !prev)}
-        data-tooltip-id={`collapse-expand-diff-${oldPath}-${newPath}`}
-        data-tooltip-content={isExpanded ? "Collapse" : "Expand"}
-        data-tooltip-place="bottom"
-        data-tooltip-delay-show={100}
-      />
-      {fileMeta?.status === "renamed" ? (
-        <>
-          <TruncatedPath path={oldPath} />
-          <p>&rarr;</p>
-          <TruncatedPath path={newPath} />
-        </>
-      ) : (
-        <TruncatedPath path={diffType === "delete" ? oldPath : newPath} />
-      )}
-      {fileMeta && (
-        <div className={styles.meta}>
-          <ChangeCount
-            additions={fileMeta.additions}
-            deletions={fileMeta.deletions}
-          />
-          <FileStatusChip status={fileMeta.status} />
-        </div>
-      )}
+      <div className={styles.fileInfo}>
+        <Image
+          src={isExpanded ? ChevronDownIcon : ChevronRightIcon}
+          alt={`Chevron icon pointing ${isExpanded ? "down" : "right"}`}
+          className={styles.chevron}
+          onClick={() => setIsExpanded((prev) => !prev)}
+          data-tooltip-id={`collapse-expand-diff-${oldPath}-${newPath}`}
+          data-tooltip-content={isExpanded ? "Collapse" : "Expand"}
+          data-tooltip-place="bottom"
+          data-tooltip-delay-show={100}
+        />
+        {fileMeta?.status === "renamed" ? (
+          <>
+            <TruncatedPath path={oldPath} />
+            <p>&rarr;</p>
+            <TruncatedPath path={newPath} />
+          </>
+        ) : (
+          <TruncatedPath path={diffType === "delete" ? oldPath : newPath} />
+        )}
+        {fileMeta && (
+          <div className={styles.meta}>
+            <ChangeCount
+              additions={fileMeta.additions}
+              deletions={fileMeta.deletions}
+            />
+            <FileStatusChip status={fileMeta.status} />
+          </div>
+        )}
+      </div>
+      <button className={styles.comment}>
+        <Image src={CommentIcon} alt="File-level comment" />
+      </button>
     </div>
   );
 }
