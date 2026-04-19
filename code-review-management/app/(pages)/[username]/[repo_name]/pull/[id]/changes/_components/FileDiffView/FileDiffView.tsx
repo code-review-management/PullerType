@@ -108,15 +108,16 @@ export default memo(function FileDiffView({
           newPath={newPath}
           isExpanded={isExpanded}
           setIsExpanded={setIsExpanded}
-          createFileDraftThread={() =>
+          createFileDraftThread={() => {
+            setIsExpanded(true);
             createDraftThread(setDraftThreads, activePath, {
               oldPath,
               activePath,
               fileStatus: fileMeta?.status ?? "",
               body: "",
               subjectType: "file",
-            })
-          }
+            });
+          }}
         />
         <div className={!isExpanded ? styles.collapsed : ""}>
           {hasFileLevelThreads && (
