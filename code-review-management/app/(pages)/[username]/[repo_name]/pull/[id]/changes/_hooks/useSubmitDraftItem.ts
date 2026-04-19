@@ -69,7 +69,6 @@ export function useSubmitDraftItem(
         commit_id: pull.head?.sha ?? "",
         path: draft.payload.filename,
         in_reply_to: draft.payload.parentId,
-        subject_type: "line",
       },
       {
         onSuccess: () => deleteDraftReply(draft.payload, setDraftReplies),
