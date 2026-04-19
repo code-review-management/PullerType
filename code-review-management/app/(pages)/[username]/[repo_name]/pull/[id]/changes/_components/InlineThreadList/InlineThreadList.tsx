@@ -25,7 +25,7 @@ export default function InlineThreadList({
 }: {
   change: ChangeData;
   publishedThreadsBySide: { left: PublishedThreadItem[]; right: PublishedThreadItem[] };
-  draftThreadsBySide: { left: DraftThreadItem | null; right: DraftThreadItem | null };
+  draftThreadsBySide: { left?: DraftThreadItem | null; right?: DraftThreadItem | null };
 }) {
   if (change.type === "delete") {
     return (
@@ -74,7 +74,7 @@ export function ThreadList({
   draftThread,
 }: {
   publishedThreads: PublishedThreadItem[];
-  draftThread: DraftThreadItem | null;
+  draftThread?: DraftThreadItem | null;
 }) {
   return (
     <div className={styles.list}>
