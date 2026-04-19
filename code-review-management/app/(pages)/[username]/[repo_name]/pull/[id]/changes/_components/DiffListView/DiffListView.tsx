@@ -53,8 +53,7 @@ export default function DiffListView({
       {diffs.map(({ diff, fileMeta }) => {
         const activePath = getActivePath(diff.type, diff.oldPath, diff.newPath);
         const diffId = diff.oldPath + "-" + diff.newPath;
-
-        const diffTooltips = (
+        const tooltips = (
           <>
             <IconTooltip id={`tooltip-collapse-diff-${diffId}`} />
             <IconTooltip id={`tooltip-file-comment-${diffId}`} />
@@ -65,7 +64,7 @@ export default function DiffListView({
 
         return (
           <div key={diffId}>
-            {diffTooltips}
+            {tooltips}
             <FileDiffView
               diff={diff}
               fileMeta={fileMeta}
