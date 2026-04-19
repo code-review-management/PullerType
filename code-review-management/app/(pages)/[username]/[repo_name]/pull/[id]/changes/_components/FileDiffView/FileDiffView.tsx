@@ -91,6 +91,10 @@ export default memo(function FileDiffView({
     />
   );
 
+  const hasFileLevelThreads =
+    publishedThreads.fileThreads.length > 0 ||
+    draftThreadsByLine?.["file-level"];
+
   return (
     <ClearHighlightContext value={{ clearHighlight }}>
       <div
@@ -115,7 +119,7 @@ export default memo(function FileDiffView({
           }
         />
         <div className={!isExpanded ? styles.collapsed : ""}>
-          {publishedThreads.fileThreads.length > 0 && (
+          {hasFileLevelThreads && (
             <ThreadList
               publishedThreads={publishedThreads.fileThreads}
               draftThread={draftThreadsByLine?.["file-level"]}
