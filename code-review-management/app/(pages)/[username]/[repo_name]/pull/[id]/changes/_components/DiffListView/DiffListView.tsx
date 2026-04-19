@@ -56,8 +56,8 @@ export default function DiffListView({
 
         const diffTooltips = (
           <>
-            <IconTooltip id={`collapse-expand-diff-${diffId}`} />
-            <IconTooltip id={`file-level-comment-${diffId}`} />
+            <IconTooltip id={`tooltip-collapse-diff-${diffId}`} />
+            <IconTooltip id={`tooltip-file-comment-${diffId}`} />
             <IconTooltip id={`tooltip-copy-${diff.oldPath}`} />
             <IconTooltip id={`tooltip-copy-${diff.newPath}`} />
           </>
