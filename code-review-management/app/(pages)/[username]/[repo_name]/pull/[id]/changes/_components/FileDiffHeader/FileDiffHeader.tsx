@@ -25,6 +25,7 @@ export default function FileDiffHeader({
   setIsExpanded: Dispatch<SetStateAction<boolean>>;
   createFileDraftThread: () => void;
 }) {
+  const diffId = `${oldPath}-${newPath}`;
   return (
     <div
       className={`${styles.fileDiffHeader} ${!isExpanded ? styles.collapsed : ""}`}
@@ -35,7 +36,7 @@ export default function FileDiffHeader({
           alt={`Chevron icon pointing ${isExpanded ? "down" : "right"}`}
           className={styles.chevron}
           onClick={() => setIsExpanded((prev) => !prev)}
-          data-tooltip-id={`collapse-expand-diff-${oldPath}-${newPath}`}
+          data-tooltip-id={`tooltip-collapse-diff-${diffId}`}
           data-tooltip-content={isExpanded ? "Collapse" : "Expand"}
           data-tooltip-place="bottom"
           data-tooltip-delay-show={100}
@@ -62,7 +63,7 @@ export default function FileDiffHeader({
       <button
         className={styles.comment}
         onClick={createFileDraftThread}
-        data-tooltip-id={`file-level-comment-${oldPath}-${newPath}`}
+        data-tooltip-id={`tooltip-file-comment-${diffId}`}
         data-tooltip-content={"Add file comment"}
         data-tooltip-place="left"
         data-tooltip-delay-show={100}
