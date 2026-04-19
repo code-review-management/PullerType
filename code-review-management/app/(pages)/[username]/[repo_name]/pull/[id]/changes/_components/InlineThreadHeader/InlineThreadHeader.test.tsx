@@ -12,10 +12,10 @@ describe("InlineThreadHeader", () => {
     render(
       <InlineThreadHeader
         title="example-title"
-        actions={<button>Edit</button>}
+        actions={<div data-testid="example-actions" />}
       />,
     );
-    expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
+    expect(screen.getByTestId("example-actions")).toBeInTheDocument();
   });
 
   it("does not render as an anchor link by default", () => {
