@@ -8,7 +8,7 @@ import {
 import {
   DraftThreadItem,
   DraftThreads,
-  getDraftThreadKey,
+  getDraftThreadKeyFromItem,
 } from "../_hooks/useDraftThreads";
 import {
   PublishedThreadItem,
@@ -27,7 +27,7 @@ export function deleteDraftThread(
   setDraftThreads: Dispatch<SetStateAction<DraftThreads>>,
 ) {
   setDraftThreads((prev) => {
-    const key = getDraftThreadKey(draft.end, draft.side);
+    const key = getDraftThreadKeyFromItem(draft);
     const draftThreads = { ...prev };
     const activePathThreads = { ...prev[draft.activePath] };
     delete activePathThreads[key];
@@ -54,6 +54,25 @@ export function deleteDraftReply(
   });
 }
 
+export function createDraftThread(
+  setDraftThreads: Dispatch<SetStateAction<DraftThreads>>,
+  activePath: string,
+  draft: DraftThreadItem,
+) {
+  setDraftThreads((prev) => {
+    const key = getDraftThreadKeyFromItem(draft);
+    if (activePath in prev && key in prev[activePath]) return prev;
+
+    return {
+      ...prev,
+      [activePath]: {
+        ...prev[activePath],
+        [key]: draft,
+      },
+    };
+  });
+}
+
 /**
  * Gets the correct path to pass to the GitHub API when publishing a draft
  * thread. If the file has a "renamed" status, the LHS of the diff is associated
@@ -69,7 +88,7 @@ export function getDraftThreadFilePath(
   oldPath: string,
   activePath: string,
   fileStatus: string,
-  side: Side,
+  side?: Side,
 ) {
   return fileStatus === "renamed" && side === "old" ? oldPath : activePath;
 }

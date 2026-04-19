@@ -3,20 +3,22 @@ import { Side } from "react-diff-view/types/interface";
 
 type Filename = string;
 type LineNumber = number;
-type DraftThreadKey = `${LineNumber}:${Side}`;
+type DraftThreadKey = `${LineNumber}:${Side}` | "file-level";
 
 export type DraftThreads = Record<Filename, DraftThreadsByLine>;
-export type DraftThreadsByLine = Record<DraftThreadKey, DraftThreadItem>;
+export type DraftThreadsByLine = Partial<
+  Record<DraftThreadKey, DraftThreadItem>
+>;
 
-export interface DraftThreadItem {
+export type DraftThreadItem = {
   oldPath: string;
   activePath: string;
   fileStatus: string;
-  start: number;
-  end: number;
-  side: Side;
   body: string;
-}
+} & (
+  | { subjectType: "file" }
+  | { subjectType: "line"; start: number; end: number; side: Side }
+);
 
 /**
  * A hook to maintain a state of draft threads created on a pull request diff.
@@ -43,4 +45,12 @@ export function getDraftThreadKey(
   side: Side,
 ): DraftThreadKey {
   return `${lineNumber}:${side}`;
+}
+
+export function getDraftThreadKeyFromItem(
+  draft: DraftThreadItem,
+): DraftThreadKey {
+  return draft.subjectType === "line"
+    ? getDraftThreadKey(draft.end, draft.side)
+    : "file-level";
 }
