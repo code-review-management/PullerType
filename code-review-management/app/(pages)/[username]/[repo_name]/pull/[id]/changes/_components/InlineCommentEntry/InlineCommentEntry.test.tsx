@@ -48,10 +48,10 @@ describe("InlineCommentEntry", () => {
     render(
       <InlineCommentEntry
         {...defaultProps}
-        headerActions={<button>Edit</button>}
+        headerActions={<div data-testid="example-header-actions" />}
       />,
     );
-    expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
+    expect(screen.getByTestId("example-header-actions")).toBeInTheDocument();
   });
 
   it("renders the markdown editor", () => {
