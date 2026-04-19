@@ -4,7 +4,6 @@
     overflow: hidden;
     box-shadow: var(--box-shadow-soft);
     scroll-margin-top: calc(var(--file-diff-header-height) * 2.6);
-    font-size: var(--font-size-diff-code);
 }
 
 .thread:target {
