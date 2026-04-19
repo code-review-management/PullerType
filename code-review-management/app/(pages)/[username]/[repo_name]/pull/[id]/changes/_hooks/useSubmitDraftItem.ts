@@ -80,7 +80,7 @@ export function useSubmitDraftItem(
   };
 
   const handleSubmit = () => {
-    // On pulls pending, button is already disabled. On pulls error, do nots
+    // On pulls pending, button is already disabled. On pulls error, do not
     // allow submission.
     if (!pull) return;
     if (draft.type === "thread") {
