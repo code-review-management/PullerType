@@ -3,7 +3,6 @@
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: var(--box-shadow-soft);
-    font-size: var(--font-size-diff-code);
 }
 
 .comment {
