@@ -3,6 +3,7 @@
     flex-direction: column;
     gap: var(--spacer-12);
     margin: var(--spacer-12);
+    font-size: var(--font-size-diff-code);
 }
 
 .normalLineColumns {
