@@ -59,7 +59,14 @@ export default function FileDiffHeader({
           </div>
         )}
       </div>
-      <button className={styles.comment} onClick={createFileDraftThread}>
+      <button
+        className={styles.comment}
+        onClick={createFileDraftThread}
+        data-tooltip-id={`file-level-comment-${oldPath}-${newPath}`}
+        data-tooltip-content={"Add file comment"}
+        data-tooltip-place="left"
+        data-tooltip-delay-show={100}
+      >
         <Image src={CommentIcon} alt="File-level comment" />
       </button>
     </div>
