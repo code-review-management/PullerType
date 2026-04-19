@@ -5,8 +5,9 @@
     height: var(--file-diff-header-height);
 
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: var(--spacer-4);
+    gap: var(--spacer-8);
 
     padding: var(--spacer-10) var(--spacer-12);
     border-bottom: var(--border-normal-width) solid var(--border-gray);
@@ -14,6 +15,13 @@
     background-color: var(--background-light);
     font-size: var(--font-size-label);
     font-weight: 450;
+}
+
+.fileInfo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacer-4);
+    min-width: 0;
 }
 
 .chevron {
@@ -71,4 +79,11 @@
     align-items: center;
     gap: var(--spacer-8);
     margin-left: var(--spacer-2);
+}
+
+.comment {
+    cursor: pointer;
+    display: flex;
+    border: none;
+    background-color: inherit;
 }
