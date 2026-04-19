@@ -16,6 +16,7 @@ const config: Config = {
   testEnvironment: "jest-environment-jsdom",
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
+    "^@components/(.*)$": "<rootDir>/app/(pages)/_components/$1",
   },
 };
 
