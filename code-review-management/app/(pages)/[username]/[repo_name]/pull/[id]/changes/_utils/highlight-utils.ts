@@ -3,6 +3,7 @@ import { ChangeData } from "react-diff-view";
 import { Side } from "react-diff-view/types/interface";
 import { DraftThreads } from "../_hooks/useDraftThreads";
 import { ActiveHighlight } from "../_hooks/useHighlight";
+import { createDraftThread } from "./comment-utils";
 import { getLineNumber } from "./diff-utils";
 
 /**
@@ -128,7 +129,6 @@ export function highlightOnMouseUp(
     activeHighlight.start,
     activeHighlight.end,
   );
-  const draftThreadKey = `${maxLine}:${activeHighlight.side}`;
 
   /**
    * If there is already a draft associated with the max highlighted line on the
@@ -136,24 +136,15 @@ export function highlightOnMouseUp(
    * only be associated with 1 draft thread at a time (same behavior as GitHub),
    * and we do not want to override the already existing draft.
    */
-  setDraftThreads((prev) => {
-    if (activePath in prev && draftThreadKey in prev[activePath]) return prev;
-
-    return {
-      ...prev,
-      [activePath]: {
-        ...prev[activePath],
-        [draftThreadKey]: {
-          oldPath: oldPath,
-          activePath: activePath,
-          fileStatus: fileStatus,
-          start: minLine,
-          end: maxLine,
-          side: activeHighlight.side,
-          body: "",
-        },
-      },
-    };
+  createDraftThread(setDraftThreads, activePath, {
+    oldPath,
+    activePath,
+    fileStatus,
+    body: "",
+    subjectType: "line",
+    start: minLine,
+    end: maxLine,
+    side: activeHighlight.side!,
   });
 }
 

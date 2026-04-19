@@ -15,6 +15,7 @@ export default function FileDiffHeader({
   newPath,
   isExpanded,
   setIsExpanded,
+  createFileDraftThread,
 }: {
   fileMeta?: FileDiff;
   diffType: FileData["type"];
@@ -22,6 +23,7 @@ export default function FileDiffHeader({
   newPath: string;
   isExpanded: boolean;
   setIsExpanded: Dispatch<SetStateAction<boolean>>;
+  createFileDraftThread: () => void;
 }) {
   return (
     <div
@@ -57,7 +59,7 @@ export default function FileDiffHeader({
           </div>
         )}
       </div>
-      <button className={styles.comment}>
+      <button className={styles.comment} onClick={createFileDraftThread}>
         <Image src={CommentIcon} alt="File-level comment" />
       </button>
     </div>

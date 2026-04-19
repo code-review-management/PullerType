@@ -30,11 +30,13 @@ export default function InlineDraftThread({
   const handleCancel = () => {
     deleteDraftThread(draft, setDraftThreads);
     // Clear highlight if it is currently associated with the draft to be deleted.
-    clearHighlight({
-      start: draft.start,
-      end: draft.end,
-      side: draft.side,
-    });
+    if (draft.subjectType === "line") {
+      clearHighlight({
+        start: draft.start,
+        end: draft.end,
+        side: draft.side,
+      });
+    }
   };
 
   const draftItem: DraftItem = { type: "thread", payload: draft };
@@ -78,6 +80,8 @@ export default function InlineDraftThread({
  * @param draft: `DraftThreadItem` object containing data about the draft thread.
  */
 function getThreadTitle(draft: DraftThreadItem) {
+  if (draft.subjectType === "file") return "Draft on file-level";
+
   const side = draft.side === "new" ? "R" : "L";
   const end = `${side}${draft.end}`;
 

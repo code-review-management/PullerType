@@ -36,8 +36,9 @@ export function useSubmitDraftItem(
     draft: Extract<DraftItem, { type: "thread" }>,
     pull: PullRequest,
   ) => {
-    const { oldPath, activePath, fileStatus, start, end, side } = draft.payload;
-    const githubSide = toGitHubSide(side);
+    const { payload } = draft;
+    const { oldPath, activePath, fileStatus, subjectType } = payload;
+    const side = subjectType === "line" ? payload.side : undefined;
     const path = getDraftThreadFilePath(oldPath, activePath, fileStatus, side);
 
     mutate(
@@ -45,16 +46,18 @@ export function useSubmitDraftItem(
         body: editorContent,
         commit_id: pull.head?.sha ?? "",
         path,
-        start_side: githubSide,
-        side: githubSide,
-        start_line: start,
-        line: end,
-        subject_type: "line",
+        subject_type: subjectType,
+        ...(subjectType === "line" && {
+          start_side: toGitHubSide(payload.side),
+          side: toGitHubSide(payload.side),
+          start_line: payload.start,
+          line: payload.end,
+        }),
       },
       {
         // Fires after invalidating the TanStack cache for review comments
         // and refetching them.
-        onSuccess: () => deleteDraftThread(draft.payload, setDraftThreads),
+        onSuccess: () => deleteDraftThread(payload, setDraftThreads),
       },
     );
   };
@@ -77,8 +80,8 @@ export function useSubmitDraftItem(
   };
 
   const handleSubmit = () => {
-    // On pulls pending, button is already disabled. On pulls error, do not
-    // allow submission. TODO: Display toast error message on pulls error.
+    // On pulls pending, button is already disabled. On pulls error, do nots
+    // allow submission.
     if (!pull) return;
     if (draft.type === "thread") {
       submitThread(draft, pull);
