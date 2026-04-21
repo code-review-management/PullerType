@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
 import { ComponentProps } from "react";
 import { render, screen } from "@testing-library/react";
+import { createFileMetaItem } from "@/mocks/tests/filetree";
 import userEvent from "@testing-library/user-event";
 import FileDiffHeader from "./FileDiffHeader";
 
@@ -43,6 +44,32 @@ describe("FileDiffHeader", () => {
       render(<FileDiffHeader {...defaultProps} />);
       await user.click(screen.getByAltText("Chevron icon pointing down"));
       expect(mockSetIsExpanded).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("file path", () => {
+    it("renders both paths with an arrow for renamed files", () => {
+      render(
+        <FileDiffHeader
+          {...defaultProps}
+          fileMeta={createFileMetaItem("", "renamed")}
+        />,
+      );
+      expect(screen.getByText("old-path.ts")).toBeInTheDocument();
+      expect(screen.getByText("\u2192")).toBeInTheDocument();
+      expect(screen.getByText("new-path.ts")).toBeInTheDocument();
+    });
+
+    it("renders the old path for deleted files", () => {
+      render(<FileDiffHeader {...defaultProps} diffType="delete" />);
+      expect(screen.getByText("old-path.ts")).toBeInTheDocument();
+      expect(screen.queryByText("new-path.ts")).not.toBeInTheDocument();
+    });
+
+    it("renders the new path for non-deleted files", () => {
+      render(<FileDiffHeader {...defaultProps} diffType="modify" />);
+      expect(screen.getByText("new-path.ts")).toBeInTheDocument();
+      expect(screen.queryByText("old-path.ts")).not.toBeInTheDocument();
     });
   });
 });
