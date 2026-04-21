@@ -10,16 +10,16 @@ jest.mock("../FileStatusChip/FileStatusChip", () => ({
   default: () => <div data-testid="file-status-chip" />,
 }));
 
-describe("FileDiffHeader", () => {
-  const mockSetIsExpanded = jest.fn();
-  const defaultProps: ComponentProps<typeof FileDiffHeader> = {
-    diffType: "modify",
-    oldPath: "old-path.ts",
-    newPath: "new-path.ts",
-    isExpanded: true,
-    setIsExpanded: mockSetIsExpanded,
-  };
+const mockSetIsExpanded = jest.fn();
+const defaultProps: ComponentProps<typeof FileDiffHeader> = {
+  diffType: "modify",
+  oldPath: "old-path.ts",
+  newPath: "new-path.ts",
+  isExpanded: true,
+  setIsExpanded: mockSetIsExpanded,
+};
 
+describe("FileDiffHeader", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -52,7 +52,7 @@ describe("FileDiffHeader", () => {
       render(
         <FileDiffHeader
           {...defaultProps}
-          fileMeta={createFileMetaItem("", "renamed")}
+          fileMeta={createFileMetaItem({ status: "renamed" })}
         />,
       );
       expect(screen.getByText("old-path.ts")).toBeInTheDocument();
@@ -78,7 +78,7 @@ describe("FileDiffHeader", () => {
       render(
         <FileDiffHeader
           {...defaultProps}
-          fileMeta={createFileMetaItem("", "renamed")}
+          fileMeta={createFileMetaItem({ status: "renamed" })}
         />,
       );
       expect(screen.getByTestId("change-count")).toBeInTheDocument();
@@ -93,7 +93,7 @@ describe("FileDiffHeader", () => {
       render(
         <FileDiffHeader
           {...defaultProps}
-          fileMeta={createFileMetaItem("", "renamed")}
+          fileMeta={createFileMetaItem({ status: "renamed" })}
         />,
       );
       expect(screen.getByTestId("file-status-chip")).toBeInTheDocument();
@@ -103,5 +103,48 @@ describe("FileDiffHeader", () => {
       render(<FileDiffHeader {...defaultProps} />);
       expect(screen.queryByTestId("file-status-chip")).not.toBeInTheDocument();
     });
+  });
+});
+
+describe("ChangeCount", () => {
+  it("renders deletions when greater than zero", () => {
+    render(
+      <FileDiffHeader
+        {...defaultProps}
+        fileMeta={createFileMetaItem({ deletions: 3, additions: 0 })}
+      />,
+    );
+    expect(screen.getByText("-3")).toBeInTheDocument();
+  });
+
+  it("renders additions when greater than zero", () => {
+    render(
+      <FileDiffHeader
+        {...defaultProps}
+        fileMeta={createFileMetaItem({ deletions: 0, additions: 5 })}
+      />,
+    );
+    expect(screen.getByText("+5")).toBeInTheDocument();
+  });
+
+  it("renders both deletions and additions when greater than zero", () => {
+    render(
+      <FileDiffHeader
+        {...defaultProps}
+        fileMeta={createFileMetaItem({ deletions: 3, additions: 5 })}
+      />,
+    );
+    expect(screen.getByText("-3")).toBeInTheDocument();
+    expect(screen.getByText("+5")).toBeInTheDocument();
+  });
+
+  it("renders neither deletions nor additions when zero", () => {
+    render(
+      <FileDiffHeader
+        {...defaultProps}
+        fileMeta={createFileMetaItem({ deletions: 0, additions: 0 })}
+      />,
+    );
+    expect(screen.queryByTestId("change-count")).not.toBeInTheDocument();
   });
 });
