@@ -10,20 +10,15 @@ jest.mock("../FileStatusChip/FileStatusChip", () => ({
   default: () => <div data-testid="file-status-chip" />,
 }));
 
-const mockSetIsExpanded = jest.fn();
 const defaultProps: ComponentProps<typeof FileDiffHeader> = {
   diffType: "modify",
   oldPath: "old-path.ts",
   newPath: "new-path.ts",
   isExpanded: true,
-  setIsExpanded: mockSetIsExpanded,
+  setIsExpanded: () => {},
 };
 
 describe("FileDiffHeader", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe("chevron", () => {
     it("renders a downward chevron when expanded", () => {
       render(<FileDiffHeader {...defaultProps} isExpanded />);
@@ -40,10 +35,27 @@ describe("FileDiffHeader", () => {
     });
 
     it("calls setIsExpanded when chevron is clicked", async () => {
+      const mockSetIsExpanded = jest.fn();
       const user = userEvent.setup();
-      render(<FileDiffHeader {...defaultProps} />);
+      render(
+        <FileDiffHeader {...defaultProps} setIsExpanded={mockSetIsExpanded} />,
+      );
       await user.click(screen.getByAltText("Chevron icon pointing down"));
       expect(mockSetIsExpanded).toHaveBeenCalledTimes(1);
+    });
+
+    it("toggles boolean in setIsExpanded callback", async () => {
+      const mockSetIsExpanded = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <FileDiffHeader {...defaultProps} setIsExpanded={mockSetIsExpanded} />,
+      );
+      await user.click(screen.getByAltText("Chevron icon pointing down"));
+      // Docs: https://jestjs.io/docs/mock-functions#mock-property
+      // Access the argument passed to `setIsExpanded` mock (i.e., `(prev) => !prev`).
+      const toggleExpanded = mockSetIsExpanded.mock.lastCall[0];
+      expect(toggleExpanded(true)).toBe(false);
+      expect(toggleExpanded(false)).toBe(true);
     });
   });
 
