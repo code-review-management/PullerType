@@ -72,4 +72,36 @@ describe("FileDiffHeader", () => {
       expect(screen.queryByText("old-path.ts")).not.toBeInTheDocument();
     });
   });
+
+  describe("file meta", () => {
+    it("renders the change count when fileMeta is provided", () => {
+      render(
+        <FileDiffHeader
+          {...defaultProps}
+          fileMeta={createFileMetaItem("", "renamed")}
+        />,
+      );
+      expect(screen.getByTestId("change-count")).toBeInTheDocument();
+    });
+
+    it("does not render the change count when fileMeta is omitted", () => {
+      render(<FileDiffHeader {...defaultProps} />);
+      expect(screen.queryByTestId("change-count")).not.toBeInTheDocument();
+    });
+
+    it("renders the file status chip when fileMeta is provided", () => {
+      render(
+        <FileDiffHeader
+          {...defaultProps}
+          fileMeta={createFileMetaItem("", "renamed")}
+        />,
+      );
+      expect(screen.getByTestId("file-status-chip")).toBeInTheDocument();
+    });
+
+    it("does not render the file status chip fileMeta is omitted", () => {
+      render(<FileDiffHeader {...defaultProps} />);
+      expect(screen.queryByTestId("file-status-chip")).not.toBeInTheDocument();
+    });
+  });
 });

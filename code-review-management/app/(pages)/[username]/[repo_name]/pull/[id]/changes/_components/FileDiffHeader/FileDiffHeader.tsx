@@ -68,7 +68,7 @@ function ChangeCount({
   if (additions < 1 && deletions < 1) return null;
 
   return (
-    <div className={styles.lineNumbers}>
+    <div className={styles.lineNumbers} data-testid="change-count">
       {deletions > 0 && <p className={styles.deletions}>-{deletions}</p>}
       {additions > 0 && <p className={styles.additions}>+{additions}</p>}
     </div>
