@@ -8,11 +8,18 @@ export function createFileMeta(filenames: string[]): FileDiff[] {
 }
 
 // Helper function to create a GitHub `FileDiff` object.
-export function createFileMetaItem(
-  filename: string,
-  status?: string,
-): FileDiff {
-  return { filename, status, additions: 5, deletions: 3 } as FileDiff;
+export function createFileMetaItem({
+  filename,
+  status,
+  additions,
+  deletions,
+}: {
+  filename?: string;
+  status?: string;
+  additions?: number;
+  deletions?: number;
+}): FileDiff {
+  return { filename, status, additions, deletions } as FileDiff;
 }
 
 // Helper function to create a react-diff-view `FileData` object.
@@ -28,7 +35,7 @@ export function getExampleFileNode1(): Extract<FileTreeNode, { type: "file" }> {
   return {
     type: "file",
     name: "index.ts",
-    fileDiff: createFileMetaItem("index.ts"),
+    fileDiff: createFileMetaItem({ filename: "index.ts" }),
   };
 }
 
@@ -47,19 +54,19 @@ export function getExampleDirectoryNode1(): Extract<
           {
             type: "file",
             name: "home.tsx",
-            fileDiff: createFileMetaItem("src/pages/home.tsx"),
+            fileDiff: createFileMetaItem({ filename: "src/pages/home.tsx" }),
           },
           {
             type: "file",
             name: "layout.tsx",
-            fileDiff: createFileMetaItem("src/pages/layout.tsx"),
+            fileDiff: createFileMetaItem({ filename: "src/pages/layout.tsx" }),
           },
         ],
       },
       {
         type: "file",
         name: "utils.ts",
-        fileDiff: createFileMetaItem("src/utils.ts"),
+        fileDiff: createFileMetaItem({ filename: "src/utils.ts" }),
       },
     ],
   };
