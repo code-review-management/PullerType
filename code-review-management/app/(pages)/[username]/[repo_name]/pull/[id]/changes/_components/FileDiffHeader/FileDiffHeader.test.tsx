@@ -150,7 +150,7 @@ describe("ChangeCount", () => {
     expect(screen.getByText("+5")).toBeInTheDocument();
   });
 
-  it("does not render deletions or additions when zero", () => {
+  it("does not render deletions nor additions when zero", () => {
     render(
       <FileDiffHeader
         {...defaultProps}
@@ -159,4 +159,23 @@ describe("ChangeCount", () => {
     );
     expect(screen.queryByTestId("change-count")).not.toBeInTheDocument();
   });
+});
+
+describe("TruncatedPath", () => {
+  it("renders the path text", () => {
+    render(<FileDiffHeader {...defaultProps} diffType="modify" />);
+    expect(screen.getByText("new-path.ts")).toBeInTheDocument();
+  });
+
+  it("copies the path to clipboard when clicked", async () => {
+    const user = userEvent.setup();
+    render(<FileDiffHeader {...defaultProps} diffType="modify" />);
+    await user.click(screen.getByText("new-path.ts"));
+
+    // Docs: https://stackoverflow.com/a/72584756
+    const clipboardText = await navigator.clipboard.readText();
+    expect(clipboardText).toBe("new-path.ts");
+  });
+
+  // Test for copied -> copy tooltip.
 });
