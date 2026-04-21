@@ -99,7 +99,7 @@ describe("FileDiffHeader", () => {
       expect(screen.getByTestId("file-status-chip")).toBeInTheDocument();
     });
 
-    it("does not render the file status chip fileMeta is omitted", () => {
+    it("does not render the file status chip when fileMeta is omitted", () => {
       render(<FileDiffHeader {...defaultProps} />);
       expect(screen.queryByTestId("file-status-chip")).not.toBeInTheDocument();
     });
@@ -138,7 +138,7 @@ describe("ChangeCount", () => {
     expect(screen.getByText("+5")).toBeInTheDocument();
   });
 
-  it("renders neither deletions nor additions when zero", () => {
+  it("does not render deletions or additions when zero", () => {
     render(
       <FileDiffHeader
         {...defaultProps}
