@@ -5,7 +5,49 @@
   justify-content: center;
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacer-24);
+  border: var(--border-normal-width) solid var(--border-gray-secondary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow-popover);
+  padding: var(--spacer-48);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacer-8);
+}
+
 .signInButton {
-  padding: 4px;
-  margin: 8px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-12);
+
+  padding: var(--spacer-6) var(--spacer-80);
+  border: none;
+  border-radius: var(--border-radius);
+  background-color: var(--color-interactive);
+  box-shadow: var(--box-shadow-button);
+
+  color: var(--background-light);
+  font-size: 0.9375rem;
+  font-weight: 450;
+  cursor: pointer;
+}
+
+.notice {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  max-width: 330px;
+}
+
+.link {
+  color: var(--color-interactive);
 }
