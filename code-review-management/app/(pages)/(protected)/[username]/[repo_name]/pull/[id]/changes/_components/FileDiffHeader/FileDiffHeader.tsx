@@ -15,7 +15,7 @@ export default function FileDiffHeader({
   newPath,
   isExpanded,
   setIsExpanded,
-  isCommitView,
+  isCommentingDisabled,
   createFileDraftThread,
 }: {
   fileMeta?: FileDiff;
@@ -24,7 +24,7 @@ export default function FileDiffHeader({
   newPath: string;
   isExpanded: boolean;
   setIsExpanded: Dispatch<SetStateAction<boolean>>;
-  isCommitView: boolean;
+  isCommentingDisabled: boolean;
   createFileDraftThread: () => void;
 }) {
   const diffId = `${oldPath}-${newPath}`;
@@ -62,7 +62,7 @@ export default function FileDiffHeader({
           </div>
         )}
       </div>
-      {!isCommitView && (
+      {!isCommentingDisabled && (
         <button
           className={styles.comment}
           onClick={createFileDraftThread}
@@ -104,7 +104,7 @@ function TruncatedPath({ path }: { path: string }) {
   };
 
   return (
-    <p
+    <div
       className={styles.path}
       onClick={handleCopy}
       data-tooltip-id={`tooltip-copy-${path}`}
@@ -114,6 +114,6 @@ function TruncatedPath({ path }: { path: string }) {
       onMouseLeave={() => setTimeout(() => setCopied(false), 200)} // Reset after fade-out to avoid briefly showing "Copy"
     >
       <span className={styles.pathText}>{path}</span>
-    </p>
+    </div>
   );
 }

@@ -21,7 +21,6 @@
   gap: var(--spacer-16);
   flex: 1;
   margin: 0 var(--spacer-48);
-  transition: margin-right 0.3s ease-in;
 }
 
 .changesWithPanel {

@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import { useDraftRepliesContext } from "../../_contexts/DraftRepliesContext";
 import { useChangesViewMode } from "../../_hooks/useChangesViewMode";
 import { DraftReplyItem, getDraftReplyKey } from "../../_hooks/useDraftReplies";
+import { usePermissionChecks } from "../../../_hooks/usePermissionChecks";
 import { PublishedThreadItem } from "../../_hooks/usePublishedThreads";
 import { deleteDraftReply, getBasename } from "../../_utils/comment-utils";
 import { useMutationInFlight } from "@/lib/api/hooks/useMutationInFlight";
@@ -34,6 +35,7 @@ export default function InlinePublishedThread({
   viewType: ThreadViewType;
 }) {
   const { mode } = useChangesViewMode();
+  const { hasCommentPermission } = usePermissionChecks();
   const { draftReplies, setDraftReplies } = useDraftRepliesContext();
   const draftReplyKey = getDraftReplyKey(thread.path, thread.id);
   const isDraftingReply = draftReplyKey in draftReplies;
@@ -45,15 +47,20 @@ export default function InlinePublishedThread({
     deleteDraftReply(draftReplies[draftReplyKey], setDraftReplies);
   };
 
+  const anchorHref =
+    thread.subject_type === "file"
+      ? `file-thread-${thread.id}`
+      : `inline-thread-${thread.id}`;
+
   return (
     <div
       className={styles.thread}
-      {...(viewType === "inline" && { id: `thread-${thread.id}` })}
+      {...(viewType === "inline" && { id: anchorHref })}
     >
       <InlineThreadHeader
         title={getThreadTitle(thread, viewType)}
         {...(viewType === "panel" &&
-          mode === "pr" && { anchorHref: `#thread-${thread.id}` })}
+          mode === "pr" && { anchorHref: `#${anchorHref}` })}
       />
       <div className={styles.comments}>
         {thread.comments.map((comment) => (
@@ -69,18 +76,19 @@ export default function InlinePublishedThread({
             startLine={startLine}
           />
         ))}
-        {viewType === "inline" && ( // Reply option currently supported only for inline threads.
-          <>
-            {isDraftingReply ? (
-              <InlineDraftReplyEntry
-                reply={draftReplies[draftReplyKey]}
-                handleCancel={handleCancelReply}
-              />
-            ) : (
-              <InlineDraftReplyTrigger thread={thread} />
-            )}
-          </>
-        )}
+        {hasCommentPermission &&
+          viewType === "inline" && ( // Reply option currently supported only for inline threads.
+            <>
+              {isDraftingReply ? (
+                <InlineDraftReplyEntry
+                  reply={draftReplies[draftReplyKey]}
+                  handleCancel={handleCancelReply}
+                />
+              ) : (
+                <InlineDraftReplyTrigger thread={thread} />
+              )}
+            </>
+          )}
       </div>
     </div>
   );

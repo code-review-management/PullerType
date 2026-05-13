@@ -31,12 +31,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Providers>
-        <body className={`${roboto.variable} ${robotoMono.variable}`}>
+      <body className={`${roboto.variable} ${robotoMono.variable}`}>
+        <Providers>
           {children}
           <ToastMessage />
-        </body>
-      </Providers>
+        </Providers>
+      </body>
     </html>
   );
 }

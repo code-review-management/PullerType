@@ -35,6 +35,9 @@
     --border-gray: #e2e2e2;
     --border-gray-secondary: #cac4d0; /* Darker borders */
 
+    /* Component colors */
+    --loading-bar-color: #158af1;
+
     /* Diff-view colors */
     --diff-omit-bg-color: #f9f9f9;
     --diff-decoration-bg-color: #e2f4ff;

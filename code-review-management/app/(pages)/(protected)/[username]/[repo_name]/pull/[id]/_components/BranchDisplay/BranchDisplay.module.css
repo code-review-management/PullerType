@@ -1,20 +1,29 @@
 .branchDisplay {
-    display: flex;
-    align-items: center;
-    gap: var(--spacer-4);
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-4);
+  min-width: 0;
 }
 
 .branchChip {
-    padding: var(--spacer-4) var(--spacer-8);
-    border-radius: 4px;
-    background-color: var(--background-secondary-light);
+  padding: var(--spacer-4) var(--spacer-8);
+  border-radius: 4px;
+  background-color: var(--background-secondary-light);
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+  overflow: hidden;
 }
 
 .branchName {
-    font-family: var(--font-roboto-mono);
-    font-size: 0.875rem;
+  font-family: var(--font-roboto-mono);
+  font-size: 0.875rem;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 16px;
 }

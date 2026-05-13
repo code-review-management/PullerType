@@ -1,3 +1,4 @@
+import { usePermissionChecks } from "../../_hooks/usePermissionChecks";
 import DiscussionBox from "../DiscussionBox/DiscussionBox";
 import Subheader from "../Subheader/Subheader";
 import TimelineDisplay from "../TimelineDisplay/TimelineDisplay";
@@ -12,10 +13,11 @@ export default function PRViewTimeline({
   repoName: string;
   id: string;
 }) {
+  const { hasCommentPermission } = usePermissionChecks();
   return (
     <div className={styles.timeline}>
       <Subheader>Timeline</Subheader>
-      <DiscussionBox />
+      {hasCommentPermission && <DiscussionBox />}
       <TimelineDisplay username={username} repoName={repoName} id={id} />
     </div>
   );

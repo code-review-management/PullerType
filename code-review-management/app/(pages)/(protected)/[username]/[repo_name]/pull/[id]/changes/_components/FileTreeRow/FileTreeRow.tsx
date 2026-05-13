@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { handleAnchorClick } from "../../_utils/scroll-utils";
 import { FileTreeNode } from "../../_utils/filetree-utils";
+import { createFileDiffId } from "../../_utils/diff-utils";
 import FileTreeDividers from "../FileTreeDividers/FileTreeDividers";
 import FileTreeIcon from "../FileTreeIcon/FileTreeIcon";
 import styles from "./FileTreeRow.module.css";
@@ -43,7 +44,7 @@ export default function FileTreeRow({
   );
   const isFilteredOut = filters && !filters.has(node);
   const fileAnchorHref =
-    node.type === "file" ? `#file-${node.fileDiff.filename}` : "";
+    node.type === "file" ? `#${createFileDiffId(node.fileDiff.filename)}` : "";
 
   return (
     <div className={isFilteredOut ? styles.hidden : ""}>

@@ -99,7 +99,7 @@ export default function MarkdownEditor({
         className={editable ? styles.editable : ""}
         // Block autofocus if the editor is not ready.
         style={{ visibility: editorReady ? "visible" : "hidden" }}
-        onClick={handleEditorClick}
+        onClick={editable ? handleEditorClick : undefined}
       >
         <EditorContent editor={editor} className={styles.tiptap} />
         {editable && actions && <div className={styles.actions}>{actions}</div>}

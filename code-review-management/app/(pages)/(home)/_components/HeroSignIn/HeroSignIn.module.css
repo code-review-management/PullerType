@@ -1,0 +1,12 @@
+.btn {
+  height: 50px;
+  padding: 0 var(--spacer-16);
+  background-color: var(--color-interactive);
+  color: var(--background-light);
+  font-size: 1.125rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 5px;
+  box-shadow: var(--box-shadow-button);
+  cursor: pointer;
+}

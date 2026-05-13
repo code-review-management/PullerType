@@ -17,6 +17,10 @@
   user-select: none;
 }
 
+.ownerNameDisabled {
+  color: var(--text-secondary);
+}
+
 .repoList {
   display: none;
   margin-left: var(--spacer-20);

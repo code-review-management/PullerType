@@ -1,4 +1,5 @@
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useRouter } from "@bprogress/next/app";
 import { Dispatch, ReactNode, SetStateAction, SubmitEvent } from "react";
 import { PullParams } from "@/types/routing.types";
 import { Commit, PullRequest } from "@/types/github.types";

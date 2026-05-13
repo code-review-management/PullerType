@@ -6,8 +6,9 @@ import { useChangesViewMode } from "../../_hooks/useChangesViewMode";
 import { usePublishedThreadsByDiff } from "../../_hooks/usePublishedThreadsByDiff";
 import { FileDiff, PullRequest } from "@/types/github.types";
 import { PublishedThreads } from "../../_hooks/usePublishedThreads";
-import { getActivePath } from "../../_utils/diff-utils";
+import { getActivePath, fixParsedDiffPaths } from "../../_utils/diff-utils";
 import { orderParsedDiffs } from "../../_utils/filetree-utils";
+import AlertBanner from "@components/AlertBanner/AlertBanner";
 import ErrorMessage from "@components/ErrorMessage/ErrorMessage";
 import FileDiffView from "../FileDiffView/FileDiffView";
 import IconTooltip from "@components/IconTooltip/IconTooltip";
@@ -35,7 +36,10 @@ export default function DiffListView({
   const diffs = useMemo(() => {
     if (!diffString) return []; // Fallback to handle type errors, but won't render during loading/error state.
     const parsedDiffs = parseDiff(diffString, { nearbySequences: "zip" });
+
+    fixParsedDiffPaths(diffString, parsedDiffs);
     orderParsedDiffs(parsedDiffs, flatFileTree);
+
     // Ordered `parsedDiffs` array has 1-1 matching with ordered `flatFileTree` array.
     return parsedDiffs.map((diff, index) => ({
       diff,
@@ -71,6 +75,7 @@ export default function DiffListView({
 
   return (
     <div className={`${styles.diffListView} ${sha ? styles.extraPadding : ""}`}>
+      {diffs.length > MAX_EXPANDED_DIFFS_ON_LOAD && <OptimizationBanner />}
       {diffs.map(({ diff, fileMeta }, idx) => {
         const activePath = getActivePath(diff.type, diff.oldPath, diff.newPath);
         const diffId = diff.oldPath + "-" + diff.newPath;
@@ -100,5 +105,14 @@ export default function DiffListView({
         );
       })}
     </div>
+  );
+}
+
+function OptimizationBanner() {
+  return (
+    <AlertBanner>
+      To optimize performance, only the first {MAX_EXPANDED_DIFFS_ON_LOAD} files
+      are expanded by default.
+    </AlertBanner>
   );
 }

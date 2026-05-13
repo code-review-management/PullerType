@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PullRequest } from "@/types/github.types";
 import { canMerge } from "../../_utils/pull-utils";
+import { usePermissionChecks } from "../../_hooks/usePermissionChecks";
 import Image from "next/image";
 import AddReviewPopover from "../AddReviewPopover/AddReviewPopover";
 import CommitIcon from "@/public/icons/commit.svg";
@@ -32,6 +33,7 @@ export default function PRHeaderActions({
   showCommitPicker?: boolean;
 }) {
   const [activePopover, setActivePopover] = useState<PRHeaderPopovers | null>(null);
+  const { hasCommentPermission, hasWritePermission } = usePermissionChecks();
 
   const togglePopover = (popover: PRHeaderPopovers) => {
     setActivePopover((prev) => (prev === popover ? null : popover));
@@ -40,7 +42,8 @@ export default function PRHeaderActions({
   const toggleMerge = () => togglePopover("merge");
   const toggleCommit = () => togglePopover("commit");
 
-  const showMergeButton = !pull.merged && pull.state === "open";
+  const showReviewButton = hasCommentPermission;
+  const showMergeButton = hasWritePermission && !pull.merged && pull.state === "open";
   const isMergeDisabled = !canMerge(pull);
 
   return (
@@ -57,13 +60,15 @@ export default function PRHeaderActions({
       <HeaderButton href={viewHref} variant="secondary">
         {viewLabel}
       </HeaderButton>
-      <PRHeaderPopoverButton
-        buttonLabel="Add review"
-        buttonVariant="secondary"
-        isPopoverOpen={activePopover === "review"}
-        popoverContent={<AddReviewPopover pull={pull} togglePopover={toggleReview} />}
-        onToggle={toggleReview}
-      />
+      {showReviewButton && (
+        <PRHeaderPopoverButton
+          buttonLabel="Add review"
+          buttonVariant="secondary"
+          isPopoverOpen={activePopover === "review"}
+          popoverContent={<AddReviewPopover pull={pull} togglePopover={toggleReview} />}
+          onToggle={toggleReview}
+        />
+      )}
       {showMergeButton && (
         <PRHeaderPopoverButton
           buttonLabel="Merge"

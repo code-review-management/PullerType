@@ -19,6 +19,7 @@ export type SuggestionCommitRequest = z.infer<
 export type CreateIssueCommentRequest = z.infer<
   typeof CreateIssueCommentRequestSchema
 >;
+export type ReviewersRequest = z.infer<typeof ReviewersRequestSchema>;
 
 const side = ["LEFT", "RIGHT"] as const;
 const mergeMethod = ["merge", "squash", "rebase"] as const;
@@ -137,4 +138,8 @@ export const SuggestionCommitRequestShema = z.object({
 });
 export const CreateIssueCommentRequestSchema = z.object({
   body: z.string(),
+});
+
+export const ReviewersRequestSchema = z.object({
+  reviewers: z.array(z.string()),
 });

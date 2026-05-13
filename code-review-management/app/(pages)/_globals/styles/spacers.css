@@ -19,9 +19,13 @@
     --border-thick-width: 2px;
     --border-radius: 4px;
 
-    --pr-view-body-header-height: 120px;
+    --pr-view-info-column-max-width: 350px;
     --page-header-height: 52px;
     --file-diff-header-height: 40px;
     --file-tree-search-bar-height: 57px;
     --thread-scroll-margin-top: calc(var(--file-diff-header-height) * 2.6);
+
+    --landing-page-header-height: 100px;
+    --landing-page-footer-height: 130px;
+    --landing-page-padding: 140px;
 }

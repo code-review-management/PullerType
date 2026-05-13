@@ -1,0 +1,39 @@
+.footer {
+  display: flex;
+  flex-direction: column;
+}
+
+.footerMain {
+  padding: var(--spacer-20) var(--spacer-48);
+  display: flex;
+  justify-content: space-between;
+  height: var(--landing-page-footer-height);
+  border-top: 1px solid var(--border-gray-secondary);
+}
+
+.pullertype {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-32);
+}
+
+.logoText {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-48);
+}
+
+.footerSecondary {
+  height: 30px;
+  background-color: var(--background-secondary-light);
+  color: var(--text-secondary);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

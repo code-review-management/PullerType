@@ -1,0 +1,21 @@
+.blurbContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.blurb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacer-32);
+  max-width: 600px;
+  text-align: center;
+}
+
+.blurbTitle {
+  font-size: 2rem;
+}
+
+.blurbText {
+  font-size: 1.125rem;
+}

@@ -16,6 +16,7 @@ import { useTimelineQuery } from "@/lib/api/queries/useTimelineQuery";
 import { PullParams } from "@/types/routing.types";
 import { ReviewComment } from "@/types/github.types";
 import { useOverflows } from "../../changes/_hooks/useOverflows";
+import { useAutoFetchAllPages } from "@/lib/api/hooks/useAutoFetchAllPages";
 
 /**
  * Renders the timeline of events.
@@ -29,7 +30,9 @@ export default function TimelineDisplay({
   repoName: string;
   id: string;
 }) {
-  const { data, isPending, isError } = useTimelineQuery(username, repoName, id);
+  const { data, fetchNextPage, hasNextPage, isFetching, isPending, isError } =
+    useTimelineQuery(username, repoName, id);
+  useAutoFetchAllPages(hasNextPage, isFetching, fetchNextPage);
 
   // TODO: Replace with proper loading/error UI.
   if (isPending) return <div>Loading timeline...</div>;
