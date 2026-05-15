@@ -5,7 +5,7 @@ export interface FileContext {
 }
 
 /**
- * Fetches the diff and full contents of a specific file at a specific commit.
+ * Fetches the full contents of a specific file at a specific commit.
  * * @param octokit An authenticated Octokit instance
  * @param owner The repository owner (e.g., "octocat")
  * @param repo The repository name (e.g., "hello-world")
