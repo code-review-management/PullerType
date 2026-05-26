@@ -10,11 +10,31 @@
   align-items: center;
 }
 
+.iconWrapper {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .plusIcon {
   cursor: pointer;
 }
 
+.listedUsers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-8);
+}
+
 .userListerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.userListerUser {
   display: flex;
   align-items: center;
   gap: var(--spacer-16);

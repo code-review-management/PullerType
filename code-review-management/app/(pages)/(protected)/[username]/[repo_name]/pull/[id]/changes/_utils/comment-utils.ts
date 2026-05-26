@@ -16,6 +16,7 @@ import {
   PublishedThreadsByLine,
 } from "../_hooks/usePublishedThreads";
 import { FileDiff } from "@/types/github.types";
+import { ThreadStatus } from "../_components/InlinePublishedThread/InlinePublishedThread";
 
 /**
  * Deletes the given draft thread from the state.
@@ -168,15 +169,26 @@ export function getBasename(path: string) {
  *
  * @param threads: Array of published threads.
  * @param flatFileTree: Flattened file tree that helps define the ordering.
+ * @param threadIndexMap: Map from thread objects to the index of their
+ *                        corresponding file-diff in `flatFileTree`.
+ * @param threadStatusMap: Map from thread objects to their statuses.
  */
 export function sortPublishedThreads(
   threads: PublishedThreadItem[],
   flatFileTree: FileDiff[],
+  threadIndexMap: Map<PublishedThreadItem, number>,
+  threadStatusMap: Map<PublishedThreadItem, ThreadStatus>,
 ) {
   threads.sort((a, b) => {
+    // Move outdated/detached comments to the bottom.
+    const isStaleA = threadStatusMap.get(a) !== "current";
+    const isStaleB = threadStatusMap.get(b) !== "current";
+    if (!isStaleA && isStaleB) return -1;
+    if (isStaleA && !isStaleB) return 1;
+
     // Match a thread to its corresponding file in the flat file tree.
-    const indexA = findThreadInFlatFileTree(a, flatFileTree);
-    const indexB = findThreadInFlatFileTree(b, flatFileTree);
+    const indexA = threadIndexMap.get(a) ?? -1;
+    const indexB = threadIndexMap.get(b) ?? -1;
 
     if (indexA === -1 || indexB === -1) {
       // Put matched files before unmatched files.
@@ -241,4 +253,51 @@ function findThreadInFlatFileTree(
       node.status === "renamed" && node.previous_filename === thread.path;
     return matchActivePath || matchPreviousPath;
   });
+}
+
+/**
+ * Builds out a map from thread objects to the index of their corresponding
+ * file-diff in `flatFileTree`.
+ *
+ * @param threads: List of published thread items.
+ * @param flatFileTree: Flattened file tree array.
+ * @returns: A map from thread objects to their file-diff indices.
+ */
+export function buildThreadIndexMap(
+  threads: PublishedThreadItem[],
+  flatFileTree: FileDiff[],
+) {
+  const threadIndexMap = new Map<PublishedThreadItem, number>();
+  threads.forEach((thread) => {
+    threadIndexMap.set(thread, findThreadInFlatFileTree(thread, flatFileTree));
+  });
+  return threadIndexMap;
+}
+
+/**
+ * Builds out a map from thread objects to their statuses.
+ *
+ * @param threads: List of published thread items.
+ * @param threadIndexMap: Map from thread objects to the index of their
+ *                        corresponding file-diff in `flatFileTree`.
+ * @returns: A map from thread objects to their statuses.
+ */
+export function buildThreadStatusMap(
+  threads: PublishedThreadItem[],
+  threadIndexMap: Map<PublishedThreadItem, number>,
+): Map<PublishedThreadItem, ThreadStatus> {
+  const threadStatusMap = new Map<PublishedThreadItem, ThreadStatus>();
+
+  threads.forEach((thread) => {
+    const index = threadIndexMap.get(thread) ?? -1;
+    if (index === -1) {
+      threadStatusMap.set(thread, "file-detached");
+    } else if (thread.line === null) {
+      threadStatusMap.set(thread, "line-outdated");
+    } else {
+      threadStatusMap.set(thread, "current");
+    }
+  });
+
+  return threadStatusMap;
 }

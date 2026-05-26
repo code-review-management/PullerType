@@ -1,0 +1,23 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacer-4);
+    padding: var(--spacer-16);
+    text-align: center;
+}
+
+.load {
+    cursor: pointer;
+    border: none;
+    background-color: inherit;
+    color: var(--color-interactive);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}

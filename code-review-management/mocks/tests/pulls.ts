@@ -31,7 +31,7 @@ export function getDefaultPull(): PullRequest {
 export function getExamplePull1(): PullRequest {
   return {
     url: "",
-    id: 0,
+    id: 1,
     html_url: "",
     number: 123,
     state: "open",
@@ -47,14 +47,14 @@ export function getExamplePull1(): PullRequest {
     requested_reviewers: [getExampleUser2()],
     head: {
       label: "",
-      ref: "",
+      ref: "example-head-ref",
       sha: "",
       user: getExampleUser1(),
       repo: getExampleRepo1(),
     },
     base: {
       label: "",
-      ref: "",
+      ref: "example-base-ref",
       sha: "",
       user: getExampleUser1(),
       repo: getExampleRepo1(),

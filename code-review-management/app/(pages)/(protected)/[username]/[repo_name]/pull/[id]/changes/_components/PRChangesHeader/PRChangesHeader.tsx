@@ -26,8 +26,12 @@ export default function PRChangesHeader({
   const { username, repo_name, id } = params;
 
   const leftChildren = (
-    <>
-      <StateChip state={getPullState(pull)} />
+    <div
+      className={`${styles.leftChildren} ${isActivityPanelOpen ? styles.leftChildrenWithPanel : ""}`}
+    >
+      <div className={styles.stateChip}>
+        <StateChip state={getPullState(pull)} />
+      </div>
       <h1 className={styles.pullTitle}>
         {pull.title} <span className={styles.pullNumber}>#{pull.number}</span>
       </h1>
@@ -37,7 +41,7 @@ export default function PRChangesHeader({
           baseRef={pull.base?.ref ?? ""}
         />
       </div>
-    </>
+    </div>
   );
 
   const rightChildren = (

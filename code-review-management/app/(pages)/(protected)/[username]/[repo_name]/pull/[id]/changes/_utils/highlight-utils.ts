@@ -166,10 +166,15 @@ export function clearHighlightIfMatch(
   setActiveHighlightSync: (data: ActiveHighlight) => void,
 ) {
   const activeHighlight = activeHighlightRef.current;
+  if (!activeHighlight.start || !activeHighlight.end) return;
+  const [minHighlightLine, maxHighlightLine] = getMinMaxLines(
+    activeHighlight.start,
+    activeHighlight.end,
+  );
 
   if (
-    activeHighlight.start === start &&
-    activeHighlight.end === end &&
+    minHighlightLine === start &&
+    maxHighlightLine === end &&
     activeHighlight.side === side
   ) {
     setActiveHighlightSync({

@@ -8,6 +8,7 @@ import {
 
 export function useScrollToId(
   activePath: string,
+  setIsDiffLoaded: Dispatch<SetStateAction<boolean>>,
   setIsExpanded: Dispatch<SetStateAction<boolean>>,
   fileDiffRef: RefObject<HTMLDivElement | null>,
 ) {
@@ -20,13 +21,17 @@ export function useScrollToId(
       const target = document.getElementById(hash);
       if (!target || !fileDiffRef.current?.contains(target)) return;
 
+      // Automatically load diff only when jumping to an inline thread.
+      if (hash.startsWith("inline-thread")) {
+        setIsDiffLoaded(true);
+      }
       setIsExpanded(true);
       setScrollId(hash);
     };
 
     window.addEventListener("hashchange", handleHashChange);
     return () => window.removeEventListener("hashchange", handleHashChange);
-  }, [activePath, setIsExpanded, fileDiffRef]);
+  }, [activePath, setIsDiffLoaded, setIsExpanded, fileDiffRef]);
 
   useEffect(() => {
     const handleScroll = () => {

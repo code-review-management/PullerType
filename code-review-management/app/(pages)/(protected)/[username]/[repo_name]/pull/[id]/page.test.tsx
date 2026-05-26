@@ -57,6 +57,11 @@ jest.mock("./_components/PRHeader/PRHeader", () => ({
   default: () => <div data-testid="pull-page-content">Pull page</div>,
 }));
 
+jest.mock("@components/LoadingSpinner/LoadingSpinner", () => ({
+  __esModule: true,
+  default: () => <div data-testid="loading-spinner" />,
+}));
+
 describe("Pull page", () => {
   it("renders", () => {
     render(<Pull />);
@@ -69,7 +74,7 @@ describe("Pull page", () => {
     expect(screen.getByTestId("pull-body-header")).toBeDefined();
     expect(screen.getByTestId("pull-body-description")).toBeDefined();
     expect(screen.getByTestId("pr-view-timeline")).toBeDefined();
-    expect(screen.getByTestId("status-section")).toBeDefined();
+    expect(screen.getAllByTestId("status-section")).toBeDefined();
     expect(screen.getByTestId("reviewers")).toBeDefined();
     expect(screen.getByTestId("assignees")).toBeDefined();
   });

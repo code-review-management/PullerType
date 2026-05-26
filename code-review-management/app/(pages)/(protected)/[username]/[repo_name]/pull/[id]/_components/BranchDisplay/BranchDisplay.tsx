@@ -1,5 +1,7 @@
 import Image from "next/image";
 import styles from "./BranchDisplay.module.css";
+import IconTooltip from "@/app/(pages)/_components/IconTooltip/IconTooltip";
+import { useState } from "react";
 
 export default function BranchDisplay({
   headRef,
@@ -10,18 +12,38 @@ export default function BranchDisplay({
 }) {
   return (
     <div className={styles.branchDisplay}>
-      <div className={styles.branchChip}>
-        <p className={styles.branchName}>{headRef}</p>
-      </div>
+      <BranchChip ref={headRef} />
       <Image
         src="/icons/merge_direction.svg"
         width={16}
         height={12}
         alt="Right arrow"
       />
-      <div className={styles.branchChip}>
-        <p className={styles.branchName}>{baseRef}</p>
-      </div>
+      <BranchChip ref={baseRef} />
+      <IconTooltip id="branch-name-tooltips" />
+    </div>
+  );
+}
+
+function BranchChip({ ref }: { ref: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(ref);
+    setCopied(true);
+  };
+  return (
+    <div
+      onClick={handleCopy}
+      className={styles.branchChip}
+      data-tooltip-id="branch-name-tooltips"
+      data-tooltip-content={
+        copied ? `${ref} (Copied!)` : `${ref} (Click to copy)`
+      }
+      data-tooltip-delay-show={100}
+      onMouseLeave={() => setTimeout(() => setCopied(false), 200)} // Reset after fade-out to avoid briefly showing "Copy"
+    >
+      <p className={styles.branchName}>{ref}</p>
     </div>
   );
 }

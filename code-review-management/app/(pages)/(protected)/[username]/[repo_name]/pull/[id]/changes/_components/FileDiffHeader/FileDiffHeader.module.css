@@ -44,7 +44,6 @@
     white-space: nowrap;
     direction: rtl;
     text-align: left;
-    max-width: 950px;
     border-radius: var(--border-radius);
     padding: var(--spacer-2) var(--spacer-4);
 }

@@ -3,4 +3,5 @@
     background-color: var(--tooltip-gray);
     padding: 3px 6px;
     z-index: 300;
+    overflow-wrap: break-word;
 }

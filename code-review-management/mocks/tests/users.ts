@@ -23,3 +23,11 @@ export function getExampleUser2(): User {
     avatar_url: "",
   };
 }
+
+export function createExampleUser(username: string, id: number): User {
+  return {
+    login: username,
+    id,
+    avatar_url: "",
+  };
+}

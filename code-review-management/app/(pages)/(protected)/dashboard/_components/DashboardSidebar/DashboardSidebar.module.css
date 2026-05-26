@@ -19,7 +19,38 @@
 }
 
 .sidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebarHeaderText {
   font-weight: 500;
+}
+
+.reposActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.actionButton {
+  background: none;
+  border: none;
+  border-radius: 5px;
+  padding: 0 var(--spacer-4);
+  cursor: pointer;
+
+  display: flex;
+  gap: var(--spacer-8);
+  align-items: center;
+}
+
+.actionButton:hover {
+  background-color: var(--background-tertiary-light);
+}
+
+.actionButtonActive {
+  background-color: var(--background-secondary-light) !important;
 }
 
 .sideBorder {

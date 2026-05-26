@@ -6,12 +6,11 @@
 
   background-color: var(--background-light);
   padding: var(--spacer-12) var(--spacer-48);
-  transition: padding-right 0.3s ease-in;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacer-48);
+  gap: var(--spacer-10);
 }
 
 .shadow {

@@ -22,7 +22,9 @@
 .metadata {
     display: flex;
     align-items: center;
-    gap: var(--spacer-8);
+    flex-wrap: wrap;
+    column-gap: var(--spacer-8);
+    row-gap: var(--spacer-4);
 }
 
 .username {

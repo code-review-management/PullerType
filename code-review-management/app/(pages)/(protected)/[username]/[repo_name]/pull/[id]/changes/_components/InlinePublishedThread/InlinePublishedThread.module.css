@@ -16,3 +16,21 @@
     gap: var(--spacer-12);
     padding: var(--spacer-12);
 }
+
+.chip {
+    padding: var(--spacer-2) var(--spacer-6);
+    border-radius: var(--spacer-12);
+    font-size: 0.625rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.outdated {
+    background-color: rgba(var(--thread-status-outdated-rgb), 0.12);
+    color: var(--thread-status-outdated);
+}
+
+.detached {
+    background-color: rgba(var(--thread-status-detached-rgb), 0.12);
+    color: var(--thread-status-detached);
+}

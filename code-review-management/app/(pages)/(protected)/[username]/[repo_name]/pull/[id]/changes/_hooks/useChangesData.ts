@@ -67,6 +67,7 @@ export function useChangesData() {
 
   let activeFiles = files;
   let activeExternalHref = pull?.html_url;
+  let hasNextActiveFilesPage = hasNextFilesPage;
   let isActiveFilesPending = isFilesPending;
   let isActiveFilesError = isFilesError;
   let activeFilesError = filesError;
@@ -74,12 +75,14 @@ export function useChangesData() {
   if (mode === "single-commit") {
     activeFiles = commit?.files;
     activeExternalHref = commit?.html_url;
+    hasNextActiveFilesPage = hasNextCommitPage;
     isActiveFilesPending = isCommitPending;
     isActiveFilesError = isCommitError;
     activeFilesError = commitError;
   } else if (mode === "cumulative-commit") {
     activeFiles = compareCommit?.files;
     activeExternalHref = compareCommit?.html_url;
+    hasNextActiveFilesPage = false;
     isActiveFilesPending = isCompareCommitPending;
     isActiveFilesError = isCompareCommitError;
     activeFilesError = compareCommitError;
@@ -91,7 +94,10 @@ export function useChangesData() {
     externalHref: activeExternalHref,
     publishedThreads,
     isPending:
-      isPullPending || isPublishedThreadsPending || isActiveFilesPending,
+      isPullPending ||
+      isPublishedThreadsPending ||
+      isActiveFilesPending ||
+      hasNextActiveFilesPage,
     isError: isPullError || isPublishedThreadsError || isActiveFilesError,
     error: pullError ?? publishedThreadsError ?? activeFilesError ?? null,
     errorSource: getErrorSource(

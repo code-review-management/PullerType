@@ -1,5 +1,5 @@
 .headerWithPanel {
-    padding-right: var(--spacer-16);
+    padding-right: var(--spacer-16) !important;
 }
 
 .pullTitle {
@@ -37,4 +37,29 @@
 
 .activityIcon {
     display: flex;
+}
+
+.leftChildren {
+    display: flex;
+    align-items: center;
+    gap: var(--spacer-12);
+    min-width: 0;
+}
+
+@media screen and (max-width: 1200px) {
+    .leftChildrenWithPanel :is(.branchDisplay, .stateChip) {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .branchDisplay {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .stateChip {
+        display: none;
+    }
 }

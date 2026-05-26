@@ -1,0 +1,12 @@
+.pageEndCta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacer-20);
+}
+
+.buttonSection {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer-20);
+}

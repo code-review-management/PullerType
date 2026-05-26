@@ -13,6 +13,7 @@ export type CodeEditResponse = z.infer<typeof CodeEditResponseSchema>;
 export type CreateIssueCommentRequest = z.infer<
   typeof CreateIssueCommentRequestSchema
 >;
+export type ReviewersRequest = z.infer<typeof ReviewersRequestSchema>;
 
 const side = ["LEFT", "RIGHT"] as const;
 const mergeMethod = ["merge", "squash", "rebase"] as const;
@@ -107,4 +108,8 @@ export const CodeEditResponseSchema = z.object({
 });
 export const CreateIssueCommentRequestSchema = z.object({
   body: z.string(),
+});
+
+export const ReviewersRequestSchema = z.object({
+  reviewers: z.array(z.string()),
 });

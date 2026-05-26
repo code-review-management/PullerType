@@ -1,15 +1,17 @@
 .pullBodyHeader {
-  height: var(--pr-view-body-header-height);
+  flex: 2;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
+  gap: var(--spacer-16);
 }
 
 .titleLeft {
   display: flex;
   flex-direction: column;
   gap: var(--spacer-16);
+  min-width: 0;
 }
 
 .titleIdentifierHeaders {
@@ -37,6 +39,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacer-16);
+  min-width: 0;
 }
 
 .userInfo {
@@ -54,6 +57,7 @@
 }
 
 .titleRight {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -77,4 +81,24 @@
 
 .deletions {
   color: var(--color-failure);
+}
+
+@media screen and (max-width: 1000px) {
+  .pullBodyHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .repoName {
+    font-size: 1.25rem;
+  }
+
+  .pullTitle {
+    font-size: 1.5rem;
+  }
+
+  .titleRight {
+    gap: var(--spacer-4);
+    align-items: flex-start;
+  }
 }

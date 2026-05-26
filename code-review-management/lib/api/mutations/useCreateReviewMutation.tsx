@@ -37,6 +37,9 @@ export function useCreateReviewMutation(
       queryClient.invalidateQueries({
         queryKey: ["timeline", owner, repo, pullNumber],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["reviews", owner, repo, pullNumber],
+      });
       toast.success("Review successfully created.");
       resetReview();
     },

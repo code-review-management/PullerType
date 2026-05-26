@@ -1,4 +1,5 @@
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useRouter } from "@bprogress/next/app";
 import { Dispatch, ReactNode, SetStateAction, SubmitEvent } from "react";
 import { PullParams } from "@/types/routing.types";
 import { Commit, PullRequest } from "@/types/github.types";
@@ -8,6 +9,7 @@ import { useCommitPickerContext } from "../../../_contexts/CommitPickerContext";
 import { formatDate } from "../../../_utils/date-utils";
 import ErrorMessage from "@components/ErrorMessage/ErrorMessage";
 import IconTooltip from "@components/IconTooltip/IconTooltip";
+import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 import PopoverContent from "@components/PopoverContent/PopoverContent";
 import SubmitButton from "@components/SubmitButton/SubmitButton";
 import styles from "./CommitPicker.module.css";
@@ -56,7 +58,7 @@ export default function CommitPicker({ pull }: { pull: PullRequest }) {
     <PopoverContent>
       <form className={styles.container} onSubmit={handleSubmit}>
         {isPending ? (
-          <div>Loading commits...</div>
+          <LoadingSpinner centered />
         ) : isError ? (
           <ErrorMessage error={error} resource="commit list" />
         ) : (

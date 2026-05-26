@@ -1,12 +1,22 @@
-.diffListView {
+.diffListView,
+.skeletonWrapper {
     display: flex;
     flex-direction: column;
     gap: var(--spacer-16);
     padding: var(--spacer-10) 0;
     width: 100%;
+}
+
+.diffListView {
     min-width: 0;
 }
 
 .extraPadding {
     padding-bottom: calc(var(--spacer-48) * 2);
+}
+
+.skeletonItem {
+    background: var(--background-secondary-light);
+    border-radius: var(--border-radius);
+    animation: var(--animation-shimmer);
 }

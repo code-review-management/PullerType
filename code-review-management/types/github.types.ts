@@ -42,12 +42,6 @@ const authorAssociation = [
   "OWNER",
 ] as const;
 const repoVisibility = ["public", "private", "internal"] as const;
-const reviewState = [
-  "APPROVED",
-  "CHANGES_REQUESTED",
-  "COMMENTED",
-  "DISMISSED",
-] as const;
 const fileDiffStatus = [
   "added",
   "removed",
@@ -247,7 +241,7 @@ export const ReviewSchema = z.object({
   user: UserSchema.nullable(),
   body: z.string(),
   html_url: z.string(),
-  state: z.enum(reviewState),
+  state: z.string(),
   submitted_at: z.string().optional(),
   author_association: z.enum(authorAssociation),
 });

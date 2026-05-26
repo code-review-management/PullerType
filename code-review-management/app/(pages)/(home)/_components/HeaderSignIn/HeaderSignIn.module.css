@@ -1,0 +1,12 @@
+.headerSignIn {
+  padding: var(--spacer-10) var(--spacer-20);
+  background: none;
+  border: 1px solid var(--border-gray-secondary);
+  border-radius: 4px;
+
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-primary);
+
+  cursor: pointer;
+}
