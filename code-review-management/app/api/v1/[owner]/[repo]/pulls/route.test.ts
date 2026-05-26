@@ -6,8 +6,9 @@ UNIT TESTS
 import { GET } from "./route";
 import { Octokit } from "octokit";
 import { getToken, JWT } from "next-auth/jwt";
-import { getDefaultRepo } from "@/mocks/tests/repos";
 import { getDefaultUser } from "@/mocks/tests/users";
+import { getDefaultPull } from "@/mocks/tests/pulls";
+import { getDefaultBranch } from "@/mocks/tests/branches";
 
 // Mock next-auth/jwt
 jest.mock("next-auth/jwt", () => ({
@@ -23,18 +24,18 @@ jest.mock("octokit", () => ({
 // Define types for our mocks
 interface MockOctokitInstance {
   rest: {
-    repos: {
-      listForAuthenticatedUser: jest.Mock;
+    pulls: {
+      list: jest.Mock;
     };
   };
 }
 
-describe("GET /api/v1/repos", () => {
-  const mockRepos = [getDefaultRepo()];
+describe("GET /api/v1/{owner}/{repo}/pulls", () => {
+  const mockPullRequests = [getDefaultPull()];
   const mockOctokitInstance: MockOctokitInstance = {
     rest: {
-      repos: {
-        listForAuthenticatedUser: jest.fn(),
+      pulls: {
+        list: jest.fn(),
       },
     },
   };
@@ -46,7 +47,7 @@ describe("GET /api/v1/repos", () => {
 
     // Create a mock request
     mockRequest = new Request(
-      "http://localhost:3000/api/v1/sampleowner/samplerepo/pulls",
+      "http://localhost:3000/api/v1/mock-owner/mock-repo/pulls",
     );
     jest
       .mocked(Octokit)
@@ -62,7 +63,10 @@ describe("GET /api/v1/repos", () => {
           owner: string;
           repo: string;
         }>((resolve) => {
-          setTimeout(() => resolve({ owner: "ownser", repo: "reopened" }), 0);
+          setTimeout(
+            () => resolve({ owner: "mock-owner", repo: "mock-repo" }),
+            0,
+          );
         }),
       });
 
@@ -82,7 +86,17 @@ describe("GET /api/v1/repos", () => {
 
       jest.mocked(getToken).mockResolvedValue(mockToken);
 
-      const response = await GET(mockRequest);
+      const response = await GET(mockRequest, {
+        params: new Promise<{
+          owner: string;
+          repo: string;
+        }>((resolve) => {
+          setTimeout(
+            () => resolve({ owner: "mock-owner", repo: "mock-repo" }),
+            0,
+          );
+        }),
+      });
 
       expect(response.status).toBe(401);
     });
@@ -96,7 +110,17 @@ describe("GET /api/v1/repos", () => {
 
       jest.mocked(getToken).mockResolvedValue(mockToken);
 
-      const response = await GET(mockRequest);
+      const response = await GET(mockRequest, {
+        params: new Promise<{
+          owner: string;
+          repo: string;
+        }>((resolve) => {
+          setTimeout(
+            () => resolve({ owner: "mock-owner", repo: "mock-repo" }),
+            0,
+          );
+        }),
+      });
 
       expect(response.status).toBe(401);
     });
@@ -110,7 +134,17 @@ describe("GET /api/v1/repos", () => {
 
       jest.mocked(getToken).mockResolvedValue(mockToken);
 
-      const response = await GET(mockRequest);
+      const response = await GET(mockRequest, {
+        params: new Promise<{
+          owner: string;
+          repo: string;
+        }>((resolve) => {
+          setTimeout(
+            () => resolve({ owner: "mock-owner", repo: "mock-repo" }),
+            0,
+          );
+        }),
+      });
 
       expect(response.status).toBe(401);
     });
@@ -123,7 +157,17 @@ describe("GET /api/v1/repos", () => {
 
       jest.mocked(getToken).mockResolvedValue(mockToken);
 
-      const response = await GET(mockRequest);
+      const response = await GET(mockRequest, {
+        params: new Promise<{
+          owner: string;
+          repo: string;
+        }>((resolve) => {
+          setTimeout(
+            () => resolve({ owner: "mock-owner", repo: "mock-repo" }),
+            0,
+          );
+        }),
+      });
 
       expect(response.status).toBe(401);
     });
@@ -142,53 +186,77 @@ describe("GET /api/v1/repos", () => {
       jest.mocked(getToken).mockResolvedValue(mockToken);
     });
 
-    it("should return 200 with repos when authenticated", async () => {
-      mockOctokitInstance.rest.repos.listForAuthenticatedUser.mockResolvedValue(
-        {
-          data: mockRepos,
-        },
-      );
+    it("should return 200 with pull requests when authenticated", async () => {
+      mockOctokitInstance.rest.pulls.list.mockResolvedValue({
+        data: mockPullRequests,
+      });
 
-      const response = await GET(mockRequest);
+      const response = await GET(mockRequest, {
+        params: new Promise<{
+          owner: string;
+          repo: string;
+        }>((resolve) => {
+          setTimeout(
+            () => resolve({ owner: "mock-owner", repo: "mock-repo" }),
+            0,
+          );
+        }),
+      });
 
       expect(response.status).toBe(200);
       expect(jest.mocked(Octokit)).toHaveBeenCalledWith({
         auth: "valid-token",
       });
-      expect(
-        mockOctokitInstance.rest.repos.listForAuthenticatedUser,
-      ).toHaveBeenCalled();
+      expect(mockOctokitInstance.rest.pulls.list).toHaveBeenCalledWith({
+        owner: "mock-owner",
+        repo: "mock-repo",
+      });
 
       const data: unknown = await response.json();
       expect(Array.isArray(data)).toBe(true);
     });
 
-    it("should filter repos using RepoSchema", async () => {
-      mockOctokitInstance.rest.repos.listForAuthenticatedUser.mockResolvedValue(
-        {
-          data: [
-            {
-              id: 0,
-              name: "",
-              full_name: "",
-              owner: getDefaultUser(),
-              html_url: "",
-              description: "",
-              created_at: "",
-              updated_at: "",
-              pushed_at: "",
-              stargazers_count: 0,
-              watchers_count: 0,
-              open_issues_count: 0,
-              has_pull_requests: true,
-              visibility: "public",
-              extraField: "blah",
-            },
-          ],
-        },
-      );
+    it("should filter pull requests using PullRequestSchema", async () => {
+      mockOctokitInstance.rest.pulls.list.mockResolvedValue({
+        data: [
+          {
+            url: "",
+            id: 0,
+            html_url: "",
+            number: 0,
+            state: "open",
+            locked: false,
+            title: "",
+            user: getDefaultUser(),
+            body: "",
+            created_at: "",
+            updated_at: "",
+            closed_at: null,
+            merged_at: null,
+            assignees: [],
+            requested_reviewers: [],
+            head: getDefaultBranch(),
+            base: getDefaultBranch(),
+            author_association: "CONTRIBUTOR",
+            draft: false,
+            assignee: null,
+            extraField: "blah",
+          },
+        ],
+      });
 
-      const response = await GET(mockRequest);
+      const response = await GET(mockRequest, {
+        params: new Promise<{
+          owner: string;
+          repo: string;
+        }>((resolve) => {
+          setTimeout(
+            () => resolve({ owner: "mock-owner", repo: "mock-repo" }),
+            0,
+          );
+        }),
+      });
+
       const data = (await response.json()) as Record<string, unknown>[];
 
       expect(data[0]).not.toHaveProperty("extraField");
@@ -209,18 +277,28 @@ describe("GET /api/v1/repos", () => {
     it("should return 500 for parsing errors", async () => {
       const mockRepos = [
         {
-          // Invalid data that will fail RepoSchema.parse
+          // Invalid data that will fail PullRequestSchema.parse
           id: "invalid-id", // Should be number
         },
       ];
 
-      mockOctokitInstance.rest.repos.listForAuthenticatedUser.mockResolvedValue(
+      mockOctokitInstance.rest.pulls.list.mockResolvedValue(
         {
           data: mockRepos,
         },
       );
 
-      const response = await GET(mockRequest);
+      const response = await GET(mockRequest, {
+        params: new Promise<{
+          owner: string;
+          repo: string;
+        }>((resolve) => {
+          setTimeout(
+            () => resolve({ owner: "mock-owner", repo: "mock-repo" }),
+            0,
+          );
+        }),
+      });
 
       expect(response.status).toBe(500);
       const text = await response.text();
@@ -228,11 +306,21 @@ describe("GET /api/v1/repos", () => {
     });
 
     it("should return 500 for unknown errors", async () => {
-      mockOctokitInstance.rest.repos.listForAuthenticatedUser.mockRejectedValue(
+      mockOctokitInstance.rest.pulls.list.mockRejectedValue(
         new Error("Unknown error"),
       );
 
-      const response = await GET(mockRequest);
+      const response = await GET(mockRequest, {
+        params: new Promise<{
+          owner: string;
+          repo: string;
+        }>((resolve) => {
+          setTimeout(
+            () => resolve({ owner: "mock-owner", repo: "mock-repo" }),
+            0,
+          );
+        }),
+      });
 
       expect(response.status).toBe(500);
       const text = await response.text();
