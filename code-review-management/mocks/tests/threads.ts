@@ -6,6 +6,21 @@ type FileDraftThreadItem = Extract<DraftThreadItem, { subjectType: "file" }>;
 type LineDraftThreadItem = Extract<DraftThreadItem, { subjectType: "line" }>;
 type ThreadDraftItem = Extract<DraftItem, { type: "thread" }>;
 
+export function getExampleFilePublishedThreadItem1(): PublishedThreadItem {
+  return {
+    id: 1,
+    path: "filename.ts",
+    original_start_line: null,
+    original_line: 1,
+    start_line: null,
+    line: 1,
+    start_side: null,
+    side: "RIGHT",
+    subject_type: "file",
+    comments: [],
+  };
+}
+
 export function getExampleLinePublishedThreadItem1(): PublishedThreadItem {
   return {
     id: 1,
@@ -19,6 +34,40 @@ export function getExampleLinePublishedThreadItem1(): PublishedThreadItem {
     subject_type: "line",
     comments: [],
   };
+}
+
+export function getLinePublishedThreadItemVariants() {
+  const base = getExampleLinePublishedThreadItem1();
+  return {
+    SINGLE_LINE_NEW_SIDE: {
+      ...base,
+      start_line: 5,
+      line: 5,
+      start_side: "RIGHT",
+      side: "RIGHT",
+    },
+    SINGLE_LINE_OLD_SIDE: {
+      ...base,
+      start_line: 5,
+      line: 5,
+      start_side: "LEFT",
+      side: "LEFT",
+    },
+    MULTI_LINE_NEW_SIDE: {
+      ...base,
+      start_line: 1,
+      line: 5,
+      start_side: "RIGHT",
+      side: "RIGHT",
+    },
+    MULTI_LINE_OLD_SIDE: {
+      ...base,
+      start_line: 1,
+      line: 5,
+      start_side: "LEFT",
+      side: "LEFT",
+    },
+  } satisfies Record<string, PublishedThreadItem>;
 }
 
 export function getExampleFileDraftThreadItem1(): FileDraftThreadItem {
