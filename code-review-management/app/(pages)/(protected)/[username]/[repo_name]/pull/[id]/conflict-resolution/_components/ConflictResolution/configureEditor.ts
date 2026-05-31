@@ -14,6 +14,8 @@ import {
   insertReverseWidget,
 } from "./renderConflicts";
 
+const conflictValue = 10;
+
 // Define base options that all 3 editors will share
 export const sharedEditorOptions: MonacoEditor.editor.IEditorConstructionOptions =
   {
@@ -25,7 +27,6 @@ export const sharedEditorOptions: MonacoEditor.editor.IEditorConstructionOptions
     lineHeight: 1.5, // Standard VS Code line spacing
     renderValidationDecorations: "off",
   };
-
 /**
  * Basically, this receives parsed content, and then turns it into the current and incoming editor.
  * To do this, we convert parsedoutputs into blocks, then pass it to the block renderer.
