@@ -125,7 +125,7 @@ export default function ConflictResolution({
     });
   };
 
-  const tabContainerRef = useRef<HTMLDivElement?>(null);
+  const tabContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollTabs = (direction: ScrollDirection) => {
     if (tabContainerRef.current) {
@@ -614,24 +614,6 @@ export default function ConflictResolution({
       className={styles.conflictResolution}
       data-theme={isDark ? "dark" : "light"}
     >
-      import React, {useRef} from 'react';
-
-      // ... inside your component
-
-      const tabContainerRef = useRef(null);
-
-const scrollTabs = (direction) => {
-  if (tabContainerRef.current) {
-    const scrollAmount = 250; // Adjust scroll distance per click
-      tabContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-      behavior: 'smooth'
-    });
-  }
-};
-
-      // ... JSX
-
       <div className={styles.mergeHeader}>
         <div className={styles.fileTabBarWrapper}>
           <button
