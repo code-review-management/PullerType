@@ -188,7 +188,7 @@
   align-self: center;
   margin-left: 16px;
   margin-right: 16px;
-  flex-shrink: 10;
+  flex-shrink: 0;
   /* CRITICAL: Prevents the button from being squished by tabs */
 }
 
