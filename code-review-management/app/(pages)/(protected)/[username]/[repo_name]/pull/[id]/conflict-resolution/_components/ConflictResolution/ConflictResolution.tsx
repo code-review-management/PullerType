@@ -39,6 +39,8 @@ export interface FileWorkspaceState {
   syncAnchors: SyncAnchor[];
 }
 
+type ScrollDirection = 'left' | 'right';
+
 loader.config({ monaco: MonacoEditor });
 
 /**
@@ -121,6 +123,18 @@ export default function ConflictResolution({
         typeof updater === "function" ? updater(currentState) : updater;
       return { ...prev, [activeFile.filename]: newState };
     });
+  };
+
+  const tabContainerRef = useRef<HTMLDivElement?>(null);
+
+  const scrollTabs = (direction: ScrollDirection) => {
+    if (tabContainerRef.current) {
+      const scrollAmount = 250; // Adjust scroll distance per click
+      tabContainerRef.current.scrollBy({
+        left: direction === 'left' ? scrollAmount : -scrollAmount,
+        behavior: 'smooth'
+      });
+    }
   };
 
   /**
@@ -600,16 +614,54 @@ export default function ConflictResolution({
       className={styles.conflictResolution}
       data-theme={isDark ? "dark" : "light"}
     >
-      <div className={styles.fileTabBar}>
-        {conflictingFiles.map((file) => (
+      import React, {useRef} from 'react';
+
+      // ... inside your component
+
+      const tabContainerRef = useRef(null);
+
+const scrollTabs = (direction) => {
+  if (tabContainerRef.current) {
+    const scrollAmount = 250; // Adjust scroll distance per click
+      tabContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+};
+
+      // ... JSX
+
+      <div className={styles.mergeHeader}>
+        <div className={styles.fileTabBarWrapper}>
           <button
-            key={file.filename}
-            className={`${styles.tabButton} ${activeFile?.filename === file.filename ? styles.activeTab : ""}`}
-            onClick={() => setActiveFile(file)}
+            className={styles.scrollArrow}
+            onClick={() => scrollTabs('left')}
+            aria-label="Scroll tabs left"
           >
-            {file.filename}
+            &lt;
           </button>
-        ))}
+
+          <div className={styles.fileTabBar} ref={tabContainerRef}>
+            {conflictingFiles.map((file) => (
+              <button
+                key={file.filename}
+                className={`${styles.tabButton} ${activeFile?.filename === file.filename ? styles.activeTab : ""}`}
+                onClick={() => setActiveFile(file)}
+              >
+                {file.filename}
+              </button>
+            ))}
+          </div>
+
+          <button
+            className={styles.scrollArrow}
+            onClick={() => scrollTabs('right')}
+            aria-label="Scroll tabs right"
+          >
+            &gt;
+          </button>
+        </div>
 
         <div className={styles.completeMergeButton}>
           <HeaderButton onClick={() => handleMergeClicked()}>
