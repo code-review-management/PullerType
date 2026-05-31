@@ -126,7 +126,7 @@ export default function ConflictResolution({
   };
 
   const tabContainerRef = useRef<HTMLDivElement>(null);
-
+  // Conflict baiting
   const scrollTabs = (direction: ScrollDirection) => {
     if (tabContainerRef.current) {
       const scrollAmount = 250; // Adjust scroll distance per click

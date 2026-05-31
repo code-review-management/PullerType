@@ -14,6 +14,7 @@ import {
   insertReverseWidget,
 } from "./renderConflicts";
 
+const conflictValue = 30;
 // Define base options that all 3 editors will share
 export const sharedEditorOptions: MonacoEditor.editor.IEditorConstructionOptions =
   {
