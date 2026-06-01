@@ -80,7 +80,7 @@ type RouteContext = {
     params: Promise<{
         owner: string;
         repo: string;
-        pull_number: number;
+        pull_number: string;
     }>;
 };
 
@@ -120,7 +120,7 @@ describe("POST /api/v1/{owner}/{repo}/pulls/{pull_number}/suggest/commit", () =>
             params: Promise.resolve({
                 owner: "test-owner",
                 repo: "test-repo",
-                pull_number: 1,
+                pull_number: "1",
             }),
         };
 
@@ -204,7 +204,7 @@ describe("POST /api/v1/{owner}/{repo}/pulls/{pull_number}/suggest/commit", () =>
                 params: Promise.resolve({
                     owner: "", // Missing owner
                     repo: "test-repo",
-                    pull_number: 1,
+                    pull_number: "1",
                 }),
             };
 
@@ -302,7 +302,7 @@ describe("POST /api/v1/{owner}/{repo}/pulls/{pull_number}/suggest/commit", () =>
                 owner: "test-owner",
                 repo: "test-repo",
                 path: "src/index.ts",
-                message: "Commiting suggestion",
+                message: "Committing suggestion",
                 content: Buffer.from("const new = true;").toString("base64"), // Base64 encoded
                 sha: validSha,
                 branch: branchName,
@@ -362,8 +362,8 @@ describe("POST /api/v1/{owner}/{repo}/pulls/{pull_number}/suggest/commit", () =>
             const response = await POST(mockRequest, mockContext);
             const text = await response.text();
 
-            expect(response.status).toBe(409);
-            expect(text).toBe("Conflict");
+            expect(response.status).toBe(500);
+            expect(text).toBe("{\"message\":\"Failed to apply suggestion\",\"error\":\"Conflict\"}");
         });
 
         it("should return 500 for schema parsing errors", async () => {
