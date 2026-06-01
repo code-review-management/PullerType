@@ -109,14 +109,12 @@ export default memo(function FileDiffView({
   const widgets = useMemo(() => {
     if (isCommitView) return;
     return getWidgets(
-      activePath,
       hunks,
       publishedThreads.lineThreads,
       draftThreadsByLine ?? {},
     );
   }, [
     isCommitView,
-    activePath,
     hunks,
     publishedThreads.lineThreads,
     draftThreadsByLine,

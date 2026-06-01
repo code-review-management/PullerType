@@ -12,6 +12,7 @@ import { PullParams } from "@/types/routing.types";
 import { usePullQuery } from "@/lib/api/queries/usePullQuery";
 import PRViewTimeline from "./_components/PRViewTimeline/PRViewTimeline";
 import IconTooltip from "@/app/(pages)/_components/IconTooltip/IconTooltip";
+import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 
 // Pull Request View page.
 export default function Pull() {
@@ -19,8 +20,8 @@ export default function Pull() {
   const { username, repo_name, id } = params;
   const { data, isPending, isError } = usePullQuery(username, repo_name, id);
 
-  // TODO: Replace with proper loading/error UI.
-  if (isPending) return <div>Loading pull request...</div>;
+  // TODO: Replace with proper error UI.
+  if (isPending) return <LoadingSpinner centered forPageLevel />;
   if (isError) return <div>Failed to load pull request.</div>;
 
   return (
@@ -48,7 +49,9 @@ export default function Pull() {
             <PRViewTimeline username={username} repoName={repo_name} id={id} />
           </div>
           <div className={styles.infoColumn}>
-            <div className={`${styles.infoColumnTop} ${styles.infoColumnTopSmallScreen}`}>
+            <div
+              className={`${styles.infoColumnTop} ${styles.infoColumnTopSmallScreen}`}
+            >
               <StatusSection pullData={data} />
               <Divider />
             </div>

@@ -125,7 +125,7 @@ const MESSAGES: Record<EventType, string> = {
  * @param eventObj TimelineEvent object
  * @returns The username of "actor1" for this event, or null.
  */
-function getActor1(eventObj: TimelineEvent) {
+export function getActor1(eventObj: TimelineEvent) {
   if (eventObj === null) {
     return null;
   }
@@ -146,7 +146,7 @@ function getActor1(eventObj: TimelineEvent) {
  * @param eventObj TimelineEvent object
  * @returns The username of "actor2" for this event, or null.
  */
-function getActor2(eventObj: TimelineEvent) {
+export function getActor2(eventObj: TimelineEvent) {
   if (eventObj === null) {
     return null;
   }
@@ -165,7 +165,7 @@ function getActor2(eventObj: TimelineEvent) {
  * @param idx The index of the event in the current render-list
  * @returns
  */
-function getEventKey(eventObj: TimelineEvent) {
+export function getEventKey(eventObj: TimelineEvent) {
   if (eventObj === null) {
     return null;
   }
@@ -184,7 +184,7 @@ function getEventKey(eventObj: TimelineEvent) {
  * @param idx Index of the event in the timeline
  * @returns A single timelineEvent object.
  */
-function getTimelineEvent(
+export function getTimelineEvent(
   eventObj: TimelineEvent,
   idx: number,
 ): processedTimelineEvent {

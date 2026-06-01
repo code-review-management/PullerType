@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 
-const CommitPickerContext = createContext<{
+export const CommitPickerContext = createContext<{
   selectedSha: string | null;
   setSelectedSha: Dispatch<SetStateAction<string | null>>;
   isCumulative: boolean;

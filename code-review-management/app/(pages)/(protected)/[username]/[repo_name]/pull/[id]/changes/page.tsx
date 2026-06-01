@@ -17,6 +17,7 @@ import DraftThreadsContext from "./_contexts/DraftThreadsContext";
 import DiffListView from "./_components/DiffListView/DiffListView";
 import ErrorMessage from "@components/ErrorMessage/ErrorMessage";
 import FileTree from "./_components/FileTree/FileTree";
+import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 import PRChangesHeader from "./_components/PRChangesHeader/PRChangesHeader";
 import styles from "./page.module.css";
 
@@ -61,13 +62,12 @@ export default function Changes() {
       </div>
     );
   }
-  // TODO: Replace with proper loading UI.
   // Keep pending check below error check since `useChangesData` conditionally
   // calls APIs (e.g., Compare commit query is disabled until pull.base.sha is
   // defined. However, if the pull request query fails, then the compare commit
   // query is never enabled and will be endlessly pending, so the error message
   // would never show).
-  else if (isPending) return <div>Loading changes...</div>;
+  else if (isPending) return <LoadingSpinner centered forPageLevel />;
 
   return (
     // If SHA query param changes, re-mount entire page.

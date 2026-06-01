@@ -10,6 +10,12 @@ export type ThreadSuggestionRequest = z.infer<
   typeof ThreadSuggestionRequestSchema
 >;
 export type CodeEditResponse = z.infer<typeof CodeEditResponseSchema>;
+export type SuggestionCommentUpdateRequest = z.infer<
+  typeof SuggestionCommentUpdateRequestSchema
+>;
+export type SuggestionCommitRequest = z.infer<
+  typeof SuggestionCommitRequestShema
+>;
 export type CreateIssueCommentRequest = z.infer<
   typeof CreateIssueCommentRequestSchema
 >;
@@ -105,6 +111,30 @@ const AdditionBlockSchema = z.object({
 export const CodeEditResponseSchema = z.object({
   deleteRange: DeleteRangeSchema,
   additionBlock: AdditionBlockSchema,
+});
+
+export const FileNameParamsSchema = z
+  .string()
+  .trim()
+  .min(1, "Path cannot be empty")
+  .refine((path) => !path.includes(".."), {
+    message: "Directory traversal is not allowed",
+  })
+  .refine((path) => !path.startsWith("/"), {
+    message: "Path must be relative (do not start with a slash)",
+  });
+
+export const SuggestionCommentUpdateRequestSchema = z.object({
+  githubCommentId: z.number(),
+  deletionContent: z.string(),
+  additionContent: z.string(),
+  relativeLineLocation: z.number(),
+});
+
+export const SuggestionCommitRequestShema = z.object({
+  filename: z.string(),
+  content: z.string(),
+  suggestionData: SuggestionCommentUpdateRequestSchema,
 });
 export const CreateIssueCommentRequestSchema = z.object({
   body: z.string(),

@@ -1,0 +1,17 @@
+@keyframes shimmer {
+    from {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+:root {
+    --animation-shimmer: shimmer 1.5s ease-in-out infinite;
+}

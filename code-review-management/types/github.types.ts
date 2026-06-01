@@ -14,6 +14,7 @@ export type PRMerge = z.infer<typeof PRMergeSchema>;
 export type ReviewComment = z.infer<typeof ReviewCommentSchema>;
 export type TimelineEvent = z.infer<typeof TimelineEventSchema>;
 export type Review = z.infer<typeof ReviewSchema>;
+export type FileContent = z.infer<typeof FileContentSchema>;
 export type IssueComment = z.infer<typeof IssueCommentSchema>;
 export type CompareCommits = z.infer<typeof CompareCommitsSchema>;
 export type CollaboratorPerms = z.infer<typeof CollaboratorPermsSchema>;
@@ -378,6 +379,51 @@ export const TimelineEventSchema = z
     StateChangeEventSchema, // event: closed, merged, reopened
   ])
   .nullable();
+  
+export const FileContentSchema = z.object({
+  type: z.literal("file"),
+  encoding: z.string(),
+  size: z.number(),
+  name: z.string(),
+  path: z.string(),
+  content: z.string(),
+  sha: z.string(),
+  url: z.url(),
+  git_url: z.url().nullish(),
+  html_url: z.url().nullish(),
+  download_url: z.url().nullish(),
+  _links: z
+    .object({
+      git: z.url().nullish(),
+      self: z.url(),
+      html: z.url().nullish(),
+    })
+    .optional(),
+});
+
+export const GitHubFileContentSchema = z.object({
+  type: z.string(),
+  encoding: z.string().nullish(),
+  size: z.number(),
+  name: z.string(),
+  path: z.string(),
+  content: z.string().nullish(),
+  sha: z.string(),
+  url: z.string(),
+  git_url: z.string().nullish(),
+  html_url: z.string().nullish(),
+  download_url: z.string().nullish(),
+  _links: z.object({
+    git: z.string().nullish(),
+    self: z.string(),
+    html: z.string().nullish(),
+  }),
+});
+
+export const GitHubFileDataSchema = z.union([
+  GitHubFileContentSchema,
+  z.array(GitHubFileContentSchema),
+]);
 
 export const IssueCommentSchema = z.object({
   id: z.number(),

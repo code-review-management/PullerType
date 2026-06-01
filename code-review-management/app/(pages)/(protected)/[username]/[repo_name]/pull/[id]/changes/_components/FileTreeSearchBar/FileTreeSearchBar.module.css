@@ -1,5 +1,6 @@
 .searchContainer {
     padding: var(--spacer-12) 0;
+    padding-right: var(--spacer-8);
     margin-right: var(--spacer-8);
     height: var(--file-tree-search-bar-height);
 }

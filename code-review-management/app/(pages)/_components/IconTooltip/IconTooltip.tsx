@@ -9,9 +9,11 @@ import styles from "./IconTooltip.module.css";
 export default function IconTooltip({
   id,
   positionStrategy,
+  maxWidth,
 }: {
   id: string;
   positionStrategy?: PositionStrategy;
+  maxWidth?: string | number;
 }) {
   return (
     // Include container arround tooltip to increase CSS specificity for
@@ -24,6 +26,9 @@ export default function IconTooltip({
         globalCloseEvents={{ scroll: true }}
         positionStrategy={positionStrategy}
         className={styles.tooltip}
+        style={{
+          maxWidth,
+        }}
       />
     </div>
   );

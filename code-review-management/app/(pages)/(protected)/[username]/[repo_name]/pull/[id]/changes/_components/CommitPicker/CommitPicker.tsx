@@ -9,6 +9,7 @@ import { useCommitPickerContext } from "../../../_contexts/CommitPickerContext";
 import { formatDate } from "../../../_utils/date-utils";
 import ErrorMessage from "@components/ErrorMessage/ErrorMessage";
 import IconTooltip from "@components/IconTooltip/IconTooltip";
+import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 import PopoverContent from "@components/PopoverContent/PopoverContent";
 import SubmitButton from "@components/SubmitButton/SubmitButton";
 import styles from "./CommitPicker.module.css";
@@ -57,15 +58,17 @@ export default function CommitPicker({ pull }: { pull: PullRequest }) {
     <PopoverContent>
       <form className={styles.container} onSubmit={handleSubmit}>
         {isPending ? (
-          <div>Loading commits...</div>
+          <LoadingSpinner centered />
         ) : isError ? (
           <ErrorMessage error={error} resource="commit list" />
         ) : (
           <>
             <div className={styles.header}>
-              <div className={styles.title}>
+              <div className={styles.title} data-testid="commit-title">
                 Commits{" "}
-                <span className={styles.count}>{commits?.length ?? ""}</span>
+                <span className={styles.count} data-testid="commit-count">
+                  {commits?.length ?? ""}
+                </span>
               </div>
               <ViewModeToggle
                 isCumulative={isCumulative}
@@ -73,7 +76,7 @@ export default function CommitPicker({ pull }: { pull: PullRequest }) {
                 isDisabled={selectedSha === null}
               />
             </div>
-            <div className={styles.list}>
+            <div className={styles.list} data-testid="commit-list">
               <CommitOption
                 value={null}
                 checked={selectedSha === null}

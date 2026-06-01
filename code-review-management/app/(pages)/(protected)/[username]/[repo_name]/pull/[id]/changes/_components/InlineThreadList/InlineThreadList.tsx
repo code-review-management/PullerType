@@ -24,8 +24,14 @@ export default function InlineThreadList({
   draftThreadsBySide,
 }: {
   change: ChangeData;
-  publishedThreadsBySide: { left: PublishedThreadItem[]; right: PublishedThreadItem[] };
-  draftThreadsBySide: { left?: DraftThreadItem | null; right?: DraftThreadItem | null };
+  publishedThreadsBySide: {
+    left: PublishedThreadItem[];
+    right: PublishedThreadItem[];
+  };
+  draftThreadsBySide: {
+    left?: DraftThreadItem | null;
+    right?: DraftThreadItem | null;
+  };
 }) {
   if (change.type === "delete") {
     return (
@@ -71,20 +77,22 @@ export default function InlineThreadList({
  */
 export function ThreadList({
   publishedThreads,
-  draftThread,
+  draftThread
 }: {
   publishedThreads: PublishedThreadItem[];
   draftThread?: DraftThreadItem | null;
 }) {
   return (
     <div className={styles.list}>
-      {publishedThreads.map((publishedThread) => (
-        <InlinePublishedThread
-          key={publishedThread.id}
-          thread={publishedThread}
-          viewType="inline"
-        />
-      ))}
+      {publishedThreads.map((publishedThread) => {
+        return (
+          <InlinePublishedThread
+            key={publishedThread.id}
+            thread={publishedThread}
+            viewType="inline"
+          />
+        );
+      })}
       {draftThread && <InlineDraftThread draft={draftThread} />}
     </div>
   );

@@ -13,12 +13,15 @@
     /* Semantic colors */
     --color-success: #3ca133;
     --color-failure: #e30202;
+    --color-failure-light: #ffeaea;
     --color-disabled: #919191;
+    --color-outdated: #b89433;
 
     --color-warning: #f8bc07;
     --color-warning-light: #fffbe8;
 
     --color-interactive: #1e84de;
+    --color-interactive-disabled: #3a6891;
     --color-interactive-light: #ebf6ff;
     --color-interactive-transparent: #d8edff80;
     --color-interactive-border: #c0dcff;
@@ -28,11 +31,13 @@
 
     /* Icon colors */
     --icon-hover-gray: #efefef;
-    --icon-hover-gray-secondary: #e1e1e1; /* Darker hover */
+    --icon-hover-gray-secondary: #e1e1e1;
+    /* Darker hover */
 
     /* Border colors */
     --border-gray: #e2e2e2;
-    --border-gray-secondary: #cac4d0; /* Darker borders */
+    --border-gray-secondary: #cac4d0;
+    /* Darker borders */
 
     /* Component colors */
     --loading-bar-color: #158af1;
@@ -82,9 +87,16 @@
     --file-status-renamed: rgb(var(--file-status-renamed-rgb));
     --file-status-fallback: rgb(var(--file-status-fallback-rgb));
 
+    --thread-status-outdated-rgb: 254, 152, 28;
+    --thread-status-detached-rgb: 63, 170, 224;
+
+    --thread-status-outdated: rgb(var(--thread-status-outdated-rgb));
+    --thread-status-detached: rgb(var(--thread-status-detached-rgb));
+
     --box-shadow-rgba: 150, 136, 136, 0.10;
     --box-shadow: 0 2px 2px 0 rgba(var(--box-shadow-rgba));
-    --box-shadow-soft: 0 2px 4px rgba(var(--box-shadow-rgba)); /* Larger blur radius */
+    --box-shadow-soft: 0 2px 4px rgba(var(--box-shadow-rgba));
+    /* Larger blur radius */
     --box-shadow-button: 0 2px 4px rgba(181, 179, 179, 0.5);
     --box-shadow-popover: 0 4px 12px rgba(0, 0, 0, 0.1);
 }

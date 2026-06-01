@@ -5,6 +5,7 @@ import { DraftReplyItem, getDraftReplyKey } from "../../_hooks/useDraftReplies";
 import { usePermissionChecks } from "../../../_hooks/usePermissionChecks";
 import { PublishedThreadItem } from "../../_hooks/usePublishedThreads";
 import { deleteDraftReply, getBasename } from "../../_utils/comment-utils";
+import { createFileDiffId } from "../../_utils/diff-utils";
 import { useMutationInFlight } from "@/lib/api/hooks/useMutationInFlight";
 import { getCreateReviewCommentMutationKey } from "@/lib/api/mutations/useCreateReviewCommentMutation";
 import CancelButton from "@components/CancelButton/CancelButton";
@@ -16,6 +17,7 @@ import InlineDraftReplyTrigger from "../InlineDraftReplyTrigger/InlineDraftReply
 import InlineThreadHeader from "../InlineThreadHeader/InlineThreadHeader";
 import styles from "./InlinePublishedThread.module.css";
 
+export type ThreadStatus = "current" | "line-outdated" | "file-detached";
 type ThreadViewType = "inline" | "panel";
 
 /**
@@ -23,28 +25,40 @@ type ThreadViewType = "inline" | "panel";
  *
  * @param thread: `PublishedThreadItem` object containing data about the published thread.
  * @param viewType: Where the published thread is rendered.
+ * @param status: Status of the thread. Used for displaying stale chips from the
+ *                side-panel.
  */
 export default function InlinePublishedThread({
   thread,
   viewType,
+  status,
 }: {
   thread: PublishedThreadItem;
   viewType: ThreadViewType;
+  status?: ThreadStatus;
 }) {
   const { mode } = useChangesViewMode();
   const { hasCommentPermission } = usePermissionChecks();
   const { draftReplies, setDraftReplies } = useDraftRepliesContext();
   const draftReplyKey = getDraftReplyKey(thread.path, thread.id);
   const isDraftingReply = draftReplyKey in draftReplies;
+  let startLine: number | undefined = undefined;
+  if (thread.start_line) startLine = thread.start_line;
+  else if (thread.line) startLine = thread.line;
 
   const handleCancelReply = () => {
     deleteDraftReply(draftReplies[draftReplyKey], setDraftReplies);
   };
 
-  const anchorHref =
+  const isStale = status && status !== "current";
+  const isAnchorEnabled =
+    viewType === "panel" && status !== "file-detached" && mode === "pr";
+
+  let anchorHref =
     thread.subject_type === "file"
       ? `file-thread-${thread.id}`
       : `inline-thread-${thread.id}`;
+  if (status === "line-outdated") anchorHref = createFileDiffId(thread.path);
 
   return (
     <div
@@ -53,18 +67,24 @@ export default function InlinePublishedThread({
     >
       <InlineThreadHeader
         title={getThreadTitle(thread, viewType)}
-        {...(viewType === "panel" &&
-          mode === "pr" && { anchorHref: `#${anchorHref}` })}
+        {...(viewType === "panel" && { tooltip: thread.path })}
+        {...(isAnchorEnabled && { anchorHref: `#${anchorHref}` })}
+        {...(isStale && {
+          actions: <StaleStatusChip status={status} />,
+        })}
       />
       <div className={styles.comments}>
         {thread.comments.map((comment) => (
           <InlineCommentEntry
             key={comment.id}
+            commentID={comment.id}
             avatar={comment.user.avatar_url}
             username={comment.user.login}
             created={comment.created_at}
             defaultEditable={false}
             defaultContent={comment.body}
+            activePath={comment.path}
+            startLine={startLine}
           />
         ))}
         {hasCommentPermission &&
@@ -113,28 +133,45 @@ function InlineDraftReplyEntry({
   );
 }
 
+function StaleStatusChip({
+  status,
+}: {
+  status: "line-outdated" | "file-detached";
+}) {
+  const isLineOutdated = status === "line-outdated";
+  const colorClass = isLineOutdated ? styles.outdated : styles.detached;
+  return (
+    <div className={`${styles.chip} ${colorClass}`}>
+      {isLineOutdated ? "Line outdated" : "File detached"}
+    </div>
+  );
+}
+
 function getThreadTitle(thread: PublishedThreadItem, viewType: ThreadViewType) {
   const basename = getBasename(thread.path);
+
+  let line = thread.line;
+  let startLine = thread.start_line;
+  if (!line) {
+    line = thread.original_line;
+    startLine = thread.original_start_line;
+  }
 
   if (thread.subject_type === "file") {
     return viewType === "inline" ? "Thread on file-level" : basename;
   }
 
-  // Placeholder in case the ending line and side are undefined.
-  if (!thread.line && !thread.side) {
+  // Placeholder in case the ending line or side are undefined.
+  if (!line || !thread.side) {
     return viewType === "inline" ? "Thread on file changes" : basename;
   }
 
   const formatSide = (side: string) => (side === "RIGHT" ? "R" : "L");
-  const endRange = `${formatSide(thread.side!)}${thread.line}`;
+  const endRange = `${formatSide(thread.side)}${line}`;
 
   // Starting line and side are undefined when it is not a multi-line comment.
-  if (
-    thread.start_side &&
-    thread.start_line &&
-    thread.start_line !== thread.line
-  ) {
-    const startRange = `${formatSide(thread.start_side)}${thread.start_line}`;
+  if (thread.start_side && startLine && startLine !== line) {
+    const startRange = `${formatSide(thread.start_side)}${startLine}`;
     return viewType === "inline"
       ? `Thread on lines ${startRange} to ${endRange}`
       : `${basename}: ${startRange} to ${endRange}`;

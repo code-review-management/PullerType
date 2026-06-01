@@ -1,5 +1,9 @@
-import { createDiff } from "@/mocks/tests/filetree";
-import { createFileDiffId, fixParsedDiffPaths } from "../diff-utils";
+import { createDiff, createFileMeta } from "@/mocks/tests/filetree";
+import {
+  buildFileDiffMap,
+  createFileDiffId,
+  fixParsedDiffPaths,
+} from "../diff-utils";
 
 describe("fixParsedDiffPaths", () => {
   const createMockDiff = () => createDiff({ oldPath: "", newPath: "" });
@@ -208,5 +212,85 @@ describe("createFileDiffId", () => {
   it("encodes trailing spaces", () => {
     const activePath = "a.txt   ";
     expect(createFileDiffId(activePath)).toBe("file-a.txt%20%20%20");
+  });
+});
+
+describe("buildFileDiffMap", () => {
+  it("maps multiple diffs to their corresponding file metas", () => {
+    const parsedDiffs = [
+      createDiff({ newPath: "a.ts", type: "modify" }),
+      createDiff({ newPath: "b.ts", type: "modify" }),
+      createDiff({ newPath: "c.ts", type: "modify" }),
+    ];
+    const flatFileTree = createFileMeta(["a.ts", "b.ts", "c.ts"]);
+    expect(buildFileDiffMap(parsedDiffs, flatFileTree)).toEqual({
+      diffs: [
+        { diff: parsedDiffs[0], fileMeta: flatFileTree[0] },
+        { diff: parsedDiffs[1], fileMeta: flatFileTree[1] },
+        { diff: parsedDiffs[2], fileMeta: flatFileTree[2] },
+      ],
+      isMappingError: false,
+    });
+  });
+
+  it("matches by path, not by index, when tree order differs from diffs", () => {
+    const parsedDiffs = [
+      createDiff({ newPath: "a.ts", type: "modify" }),
+      createDiff({ newPath: "b.ts", type: "modify" }),
+    ];
+    const flatFileTree = createFileMeta(["b.ts", "a.ts"]);
+    expect(buildFileDiffMap(parsedDiffs, flatFileTree)).toEqual({
+      diffs: [
+        { diff: parsedDiffs[0], fileMeta: flatFileTree[1] },
+        { diff: parsedDiffs[1], fileMeta: flatFileTree[0] },
+      ],
+      isMappingError: false,
+    });
+  });
+
+  it("flags mapping error when lengths differ", () => {
+    const parsedDiffs = [createDiff({ newPath: "a.ts", type: "modify" })];
+    const flatFileTree = createFileMeta(["a.ts", "b.ts"]);
+    expect(buildFileDiffMap(parsedDiffs, flatFileTree)).toEqual({
+      diffs: [{ diff: parsedDiffs[0], fileMeta: flatFileTree[0] }],
+      isMappingError: true,
+    });
+  });
+
+  it("flags mapping error when pairing unmatched diffs with undefined", () => {
+    const parsedDiffs = [
+      createDiff({ newPath: "a.ts", type: "modify" }),
+      createDiff({ newPath: "missing.ts", type: "modify" }),
+    ];
+    const flatFileTree = createFileMeta(["a.ts", "b.ts"]);
+    expect(buildFileDiffMap(parsedDiffs, flatFileTree)).toEqual({
+      diffs: [
+        { diff: parsedDiffs[0], fileMeta: flatFileTree[0] },
+        { diff: parsedDiffs[1], fileMeta: undefined },
+      ],
+      isMappingError: true,
+    });
+  });
+
+  it("uses oldPath for deleted diffs", () => {
+    const parsedDiffs = [
+      createDiff({ oldPath: "a.ts", newPath: "", type: "delete" }),
+    ];
+    const flatFileTree = createFileMeta(["a.ts"]);
+    expect(buildFileDiffMap(parsedDiffs, flatFileTree)).toEqual({
+      diffs: [{ diff: parsedDiffs[0], fileMeta: flatFileTree[0] }],
+      isMappingError: false,
+    });
+  });
+
+  it("uses newPath for renamed diffs", () => {
+    const parsedDiffs = [
+      createDiff({ oldPath: "", newPath: "renamed.ts", type: "rename" }),
+    ];
+    const flatFileTree = createFileMeta(["renamed.ts"]);
+    expect(buildFileDiffMap(parsedDiffs, flatFileTree)).toEqual({
+      diffs: [{ diff: parsedDiffs[0], fileMeta: flatFileTree[0] }],
+      isMappingError: false,
+    });
   });
 });

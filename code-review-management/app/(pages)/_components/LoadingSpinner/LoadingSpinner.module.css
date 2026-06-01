@@ -1,0 +1,8 @@
+.centered {
+    display: flex;
+    justify-content: center;
+}
+
+.pageMargin {
+    margin-top: var(--spacer-24);
+}

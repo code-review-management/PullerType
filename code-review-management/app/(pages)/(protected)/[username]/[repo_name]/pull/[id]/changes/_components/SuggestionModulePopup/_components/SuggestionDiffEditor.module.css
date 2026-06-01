@@ -1,0 +1,35 @@
+.monaco-hover-line-yellow {
+  background-color: rgba(255, 255, 0, 0.1);
+}
+
+.monaco-expand-plus-btn {
+  cursor: pointer !important;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.monaco-expand-plus-btn::before {
+  content: "+";
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #2ea043;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.monaco-expand-plus-btn:hover::before {
+  background-color: #3fb950;
+}

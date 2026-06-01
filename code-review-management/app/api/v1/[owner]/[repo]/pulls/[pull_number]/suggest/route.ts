@@ -1,3 +1,9 @@
+/*
+/api/v1/{owner}/{repo}/pulls/{pull_number}/suggest
+
+*NOT TO BE POLLED*
+*/
+
 import { getCookieName } from "@/app/api/_utils/cookie-utils";
 import { generateSuggestion } from "@/lib/api/gemini/geminiOrchestrator";
 import { ThreadSuggestionRequestSchema } from "@/types/request.types";
@@ -16,11 +22,6 @@ const secret = process.env.AUTH_SECRET;
 const cookie = getCookieName();
 
 export async function POST(req: Request, context: RouteContext) {
-  const { owner, repo, pull_number } = await context.params;
-  const castedPullNumber: number = Number(pull_number);
-
-  const reqBody = await req.json();
-  const reqArgs = ThreadSuggestionRequestSchema.safeParse(reqBody);
   const token = await getToken({
     req: req,
     secret: secret,
@@ -29,9 +30,15 @@ export async function POST(req: Request, context: RouteContext) {
 
   // Validate token
   if (token == null || token.accessToken == null || token.githubId == null) {
-    console.log("Unauthorized request at ${new Date()}");
+    console.log(`Unauthorized request at ${new Date()}`);
     return new Response(null, { status: 401 });
   }
+
+  const { owner, repo, pull_number } = await context.params;
+  const castedPullNumber: number = Number(pull_number);
+
+  const reqBody = await req.json();
+  const reqArgs = ThreadSuggestionRequestSchema.safeParse(reqBody);
 
   // Validate required parameters
   if (!owner || !repo || !castedPullNumber) {

@@ -1,18 +1,36 @@
 .thread {
-    border: var(--border-normal-width) solid var(--border-gray);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--box-shadow-soft);
-    scroll-margin-top: var(--thread-scroll-margin-top);
+  border: var(--border-normal-width) solid var(--border-gray);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow-soft);
+  scroll-margin-top: var(--thread-scroll-margin-top);
 }
 
 .thread:target {
-    outline: var(--border-thick-width) solid var(--color-interactive);
+  outline: var(--border-thick-width) solid var(--color-interactive);
 }
 
 .comments {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacer-12);
-    padding: var(--spacer-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-12);
+  padding: var(--spacer-12);
+}
+
+.chip {
+  padding: var(--spacer-2) var(--spacer-6);
+  border-radius: var(--spacer-12);
+  font-size: 0.625rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.outdated {
+  background-color: rgba(var(--thread-status-outdated-rgb), 0.12);
+  color: var(--thread-status-outdated);
+}
+
+.detached {
+  background-color: rgba(var(--thread-status-detached-rgb), 0.12);
+  color: var(--thread-status-detached);
 }

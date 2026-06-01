@@ -4,6 +4,7 @@ import { ChangeData, FileData, HunkData } from "react-diff-view";
 import { Side } from "react-diff-view/types/interface";
 import { FileDiff } from "@/types/github.types";
 import { LoadDiffReason } from "../_components/LoadDiffPrompt/LoadDiffPrompt";
+import { buildPathTreeIndexMap } from "./filetree-utils";
 
 export function getLineNumber(change: ChangeData, side: Side) {
   if (change.type === "delete" || change.type === "insert") {
@@ -132,4 +133,26 @@ function isDiffAtLeast100KB(hunks: HunkData[]) {
 
 function isDiffOver500Lines(hunks: HunkData[]) {
   return hunks.reduce((sum, hunk) => sum + hunk.changes.length, 0) > 500;
+}
+
+export function buildFileDiffMap(
+  parsedDiffs: FileData[],
+  flatFileTree: FileDiff[],
+) {
+  const pathTreeIndexMap = buildPathTreeIndexMap(flatFileTree);
+  let unmatched = false;
+
+  const diffs = parsedDiffs.map((diff) => {
+    const activePath = getActivePath(diff.type, diff.oldPath, diff.newPath);
+    const idx = pathTreeIndexMap.get(activePath);
+
+    if (idx === undefined) unmatched = true;
+    const fileMeta = idx !== undefined ? flatFileTree[idx] : undefined;
+    return { diff, fileMeta };
+  });
+
+  return {
+    diffs,
+    isMappingError: unmatched || parsedDiffs.length !== flatFileTree.length,
+  };
 }

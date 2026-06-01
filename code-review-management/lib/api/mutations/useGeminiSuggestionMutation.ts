@@ -31,6 +31,7 @@ export function useGeminiSuggestionMutation(
       await queryClient.invalidateQueries({
         queryKey: ["review-comments", owner, repo, pullNumber],
       });
+      toast.success("Suggestion made!");
     },
     onError: () => {
       toast.error("Failed to post comment.");

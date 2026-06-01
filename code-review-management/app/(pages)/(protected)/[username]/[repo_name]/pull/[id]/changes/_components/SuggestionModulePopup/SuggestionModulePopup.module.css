@@ -1,0 +1,101 @@
+.moduleContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-light);
+}
+
+.editorContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  position: relative;
+}
+
+.popupHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: var(--spacer-8) var(--spacer-16);
+  background-color: var(--background-secondary-light);
+  border-bottom: 1px solid var(--border-gray);
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.closeButton {
+  padding: var(--spacer-8) var(--spacer-16);
+  padding-left: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: var(--spacer-24);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.closeButton:hover {
+  color: #000;
+  font-weight: bold;
+}
+
+.popupLabel {
+  color: var(--text-primary);
+  font-size: 20px;
+  font-weight: 500;
+  display: block;
+  flex: 1 1 auto;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.updateButtonInvalid {
+  width: fit-content;
+  height: fit-content;
+  border-radius: var(--spacer-16);
+  border: 1px solid var(--border-gray);
+  font-weight: 600;
+  padding: var(--spacer-4) var(--spacer-16);
+  margin-right: var(--spacer-16);
+  background-color: var(--color-interactive-disabled);
+  color: var(--background-secondary-light);
+  cursor: not-allowed;
+}
+
+.updateButtonValid {
+  width: fit-content;
+  height: fit-content;
+  border-radius: var(--spacer-16);
+  border: 1px solid var(--border-gray);
+  font-weight: 600;
+  padding: var(--spacer-4) var(--spacer-16);
+  margin-right: var(--spacer-16);
+  background-color: var(--color-interactive);
+  color: var(--background-light);
+  cursor: pointer;
+}
+
+.commitButton {
+  width: fit-content;
+  height: fit-content;
+  border-radius: var(--spacer-16);
+  border: 1px solid var(--border-gray);
+  font-weight: 600;
+  padding: var(--spacer-4) var(--spacer-16);
+  margin-right: var(--spacer-16);
+  background-color: var(--color-success);
+  color: var(--background-light);
+}

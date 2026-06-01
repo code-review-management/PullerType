@@ -9,6 +9,12 @@
   font-size: 0.9375rem;
 }
 
+.tertiary {
+  background: rgba(var(--status-conflict-rgb), .72);
+  border: 1px solid var(--status-conflict);
+  color: var(--background-light);
+}
+
 .secondary {
   background: none;
   border: 1px solid var(--border-gray-secondary);
