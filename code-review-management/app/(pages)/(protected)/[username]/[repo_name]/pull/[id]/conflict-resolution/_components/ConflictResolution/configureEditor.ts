@@ -23,7 +23,7 @@ export const sharedEditorOptions: MonacoEditor.editor.IEditorConstructionOptions
     fontWeight: "400", // VS Code's default weight
     letterSpacing: 0,
     lineHeight: 1.5, // Standard VS Code line spacing
-    renderValidationDecorations: "on",
+    renderValidationDecorations: "off",
   };
 
 /**
