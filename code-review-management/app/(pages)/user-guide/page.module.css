@@ -1,0 +1,51 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.pageContent {
+  flex: 1;
+  padding: var(--spacer-80);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-40);
+}
+
+.pageContent > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-20);
+}
+
+.pageContent a {
+    color: var(--color-interactive);
+}
+
+.pageContent ol,
+.pageContent ul {
+  margin-left: var(--spacer-40);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-8);
+}
+
+.pageContent li > p {
+  margin-bottom: var(--spacer-8);
+}
+
+.imageWrapper {
+  max-width: 800px;
+  height: 400px;
+  position: relative;
+}
+
+.headerImageWrapper {
+  max-width: 600px;
+  height: 50px;
+  position: relative;
+}
+
+.image {
+  object-fit: contain;
+}

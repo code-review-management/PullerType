@@ -10,7 +10,7 @@ const HEADER_LINKS = [
   },
   {
     text: "User Guide",
-    href: "/",
+    href: "/user-guide",
   },
 ];
 
