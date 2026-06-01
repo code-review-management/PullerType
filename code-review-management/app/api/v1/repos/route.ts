@@ -21,7 +21,7 @@ export async function GET(req: Request) {
 
   // Validate token
   if (token == null || token.accessToken == null || token.githubId == null) {
-    console.log("Unauthorized request at ${new Date()}");
+    console.log(`Unauthorized request at ${new Date()}`);
     return new Response(null, { status: 401 });
   }
 
@@ -48,6 +48,7 @@ export async function GET(req: Request) {
       return new Response(error.message, { status: error.status });
     } else {
       // Parsing/other error
+      console.log(error);
       return new Response("Server error", { status: 500 });
     }
   }
