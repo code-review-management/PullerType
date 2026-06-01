@@ -11,6 +11,7 @@ import PullRequestPageScreenshot from "../../../public/user-guide/pull_request_p
 import DiffViewPageScreenshot from "../../../public/user-guide/diff_view_page.png";
 import GeminiSuggestionRenderedScreenshot from "../../../public/user-guide/gemini_suggestion_rendered.png";
 import GeminiSuggestionExpandedScreenshot from "../../../public/user-guide/gemini_suggestion_expanded.png";
+import Link from "next/link";
 
 export default function UserGuide() {
   return (
@@ -61,8 +62,8 @@ export default function UserGuide() {
               </strong>
             </li>
             <li>
-              Go to our app with this link:
-              https://code-review-management-tool.vercel.app/{" "}
+              Go to our app with this link:{" "}
+              <Link href="/">https://code-review-management-tool.vercel.app</Link>
             </li>
             <li>
               Go through the sign in process, allowing our GitHub app access to
