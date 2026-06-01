@@ -131,7 +131,7 @@ export default function ConflictResolution({
     if (tabContainerRef.current) {
       const scrollAmount = 250; // Adjust scroll distance per click
       tabContainerRef.current.scrollBy({
-        left: direction === 'left' ? scrollAmount : -scrollAmount,
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
       });
     }
