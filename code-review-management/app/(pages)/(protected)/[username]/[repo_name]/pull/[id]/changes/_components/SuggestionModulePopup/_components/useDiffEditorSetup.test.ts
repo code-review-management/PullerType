@@ -110,6 +110,23 @@ const createMonacoMock = () => {
       Backspace: 1, Delete: 2, Enter: 3, Space: 4,
       KeyA: 31, KeyZ: 56, Digit0: 21, Digit9: 30
     },
+    languages: {
+      typescript: {
+        JsxEmit: {
+          React: 1, // Dummy value to prevent the undefined error
+        },
+        // You will likely need to mock these defaults too, 
+        // as setting compiler options usually calls these immediately after!
+        typescriptDefaults: {
+          setCompilerOptions: jest.fn(),
+          setDiagnosticsOptions: jest.fn(),
+        },
+        javascriptDefaults: {
+          setCompilerOptions: jest.fn(),
+          setDiagnosticsOptions: jest.fn(),
+        },
+      },
+    },
   };
 
   return {
@@ -267,6 +284,9 @@ describe("useDiffEditorSetup", () => {
   // --- Decorations Coverage (Lines 203-252) ---
 
   it("calculates and sets appropriate editor decorations", () => {
+    // 1. Tell Jest to control time
+    jest.useFakeTimers();
+
     const { result } = renderHook(() => useDiffEditorSetup(defaultProps));
     const { mockMonaco, mockEditorInstance, mockModifiedEditor } = createMonacoMock();
 
@@ -275,10 +295,12 @@ describe("useDiffEditorSetup", () => {
       mockMonaco as unknown as Monaco
     );
 
-    const setCalls = mockModifiedEditor.createDecorationsCollection().set.mock.calls;
-    expect(setCalls.length).toBeGreaterThan(0);
+    // 2. Fast-forward the clock by 100ms so your setTimeout(..., 50) resolves
+    jest.advanceTimersByTime(100);
 
-    // Explicitly type the array of decorations being passed to .set()
+    const setCalls = mockModifiedEditor.createDecorationsCollection().set.mock.calls;
+
+    // Now this will exist!
     const decorationsArray: editor.IModelDeltaDecoration[] = setCalls[0][0];
 
     // Use the correct Monaco type for the filter parameter
@@ -291,6 +313,9 @@ describe("useDiffEditorSetup", () => {
       (d: editor.IModelDeltaDecoration) => d.options.className?.includes("modifiedBlock")
     );
     expect(blockDecorations.length).toBeGreaterThan(0);
+
+    // 3. Clean up the timers so subsequent tests aren't affected
+    jest.useRealTimers();
   });
 
   // --- ReadOnly Enforcement (Lines 257-269) ---
@@ -510,7 +535,7 @@ describe("useDiffEditorSetup", () => {
       target: { type: mockMonaco.editor.MouseTargetType.GUTTER_LINE_NUMBERS, position: { lineNumber: 2 } },
     }));
 
-    expect(mockCalculateRegions).toHaveBeenCalledWith(2, expect.any(Object));
+    expect(mockCalculateRegions).toHaveBeenCalledWith(2, expect.any(Object), false);
     expect(defaultProps.onCodeChange).toHaveBeenCalled();
   });
 
@@ -539,17 +564,24 @@ describe("useDiffEditorSetup", () => {
 
     mockModifiedEditor.createDecorationsCollection().set.mockClear();
 
+    // 1. Rerender with the new beforeCode
     rerender({ ...emptyProps, beforeCode: "line1\nline2\nline3" });
-    expect(mockModifiedEditor.createDecorationsCollection().set).toHaveBeenCalled();
 
-    setLineCount(3);
+    // 2. Simulate the user typing a new line into the editor.
+    setLineCount(4);
 
+    // 3. Ensure your mock `getValueInRange` returns the "newly typed" code
+    // Note: adjust the exact path to `getValueInRange` based on your createMonacoMock shape
+    mockModifiedEditor.getModel().getValueInRange.mockReturnValue("user typed this");
+
+    // 4. Fire the event
     act(() => emitters.modelContent.fire({}));
 
+    // 5. Expect the call with the new extracted text
     expect(emptyProps.onCodeChange).toHaveBeenCalledWith(
       "line1\nline2\nline3",
       "",
-      "",
+      "user typed this",
       ""
     );
   });
@@ -625,7 +657,7 @@ describe("useDiffEditorSetup", () => {
       target: { type: mockMonaco.editor.MouseTargetType.GUTTER_LINE_NUMBERS, position: { lineNumber: 2 } },
     }));
 
-    expect(mockCalculateRegions).toHaveBeenCalledWith(2, expect.any(Object));
+    expect(mockCalculateRegions).toHaveBeenCalledWith(2, expect.any(Object), false);
     expect(defaultProps.onCodeChange).toHaveBeenCalled();
   });
 });

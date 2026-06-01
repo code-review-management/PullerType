@@ -110,7 +110,7 @@ export const vsCodeLightPlus = {
 };
 
 
-function getLines(fileContent: string, hasCarriageReturn: boolean): string[] {
+export function getLines(fileContent: string, hasCarriageReturn: boolean): string[] {
   const splitToken = hasCarriageReturn ? '\r\n' : '\n';
 
   if (!fileContent) return [];

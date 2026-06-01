@@ -25,17 +25,21 @@ describe("SuggestionDiffEditor Utilities", () => {
 
     describe("getLines", () => {
         it("returns an empty array for an empty string or falsy value", () => {
-            expect(getLines("")).toEqual([]);
-            expect(getLines(undefined as unknown as string)).toEqual([]);
+            expect(getLines("", false)).toEqual([]);
+            expect(getLines(undefined as unknown as string, false)).toEqual([]);
         });
 
         it("returns an array with a single element for a single line", () => {
-            expect(getLines("const x = 10;")).toEqual(["const x = 10;"]);
+            expect(getLines("const x = 10;", false)).toEqual(["const x = 10;"]);
         });
 
         it("returns an array of lines for a multiline string", () => {
-            expect(getLines("line1\nline2\nline3")).toEqual(["line1", "line2", "line3"]);
+            expect(getLines("line1\nline2\nline3", false)).toEqual(["line1", "line2", "line3"]);
         });
+
+        it ("handles carriage returns", () => {
+            expect(getLines("line1\r\nline2\r\nline3", true)).toEqual(["line1", "line2", "line3"]);
+        })
     });
 
     describe("calculateExpandedRegions", () => {
@@ -48,12 +52,12 @@ describe("SuggestionDiffEditor Utilities", () => {
 
         it("returns null if the clicked line is within the diff bounds", () => {
             // beforeCode has 2 lines, so diff starts at line 3 and ends at line 3.
-            expect(calculateExpandedRegions(3, defaultData)).toBeNull();
+            expect(calculateExpandedRegions(3, defaultData, false)).toBeNull();
         });
 
         it("shifts 'beforeCode' into the diff region when clicking above the diff", () => {
             // Clicking on line 1 should take 2 lines from 'beforeCode' (lines 1 and 2)
-            const result = calculateExpandedRegions(1, defaultData);
+            const result = calculateExpandedRegions(1, defaultData, false);
 
             expect(result).not.toBeNull();
             expect(result?.beforeCode).toBe("");
@@ -63,7 +67,7 @@ describe("SuggestionDiffEditor Utilities", () => {
         });
 
         it("shifts 'afterCode' into the diff region when clicking below the diff", () => {
-            const result = calculateExpandedRegions(5, defaultData);
+            const result = calculateExpandedRegions(5, defaultData, false);
 
             expect(result).not.toBeNull();
             expect(result?.beforeCode).toBe("line1\nline2");
@@ -80,7 +84,7 @@ describe("SuggestionDiffEditor Utilities", () => {
                 afterCode: "line4",
             };
 
-            const result = calculateExpandedRegions(2, emptyMiddleData);
+            const result = calculateExpandedRegions(2, emptyMiddleData, false);
 
             expect(result?.beforeCode).toBe("line1");
             expect(result?.originalCode).toBe("line2");
@@ -96,7 +100,7 @@ describe("SuggestionDiffEditor Utilities", () => {
             };
 
             // Change from 3 to 2 to click on the first line of the afterCode
-            const result = calculateExpandedRegions(2, emptyMiddleData);
+            const result = calculateExpandedRegions(2, emptyMiddleData, false);
 
             expect(result?.afterCode).toBe("line4");
             expect(result?.originalCode).toBe("line3");
@@ -111,7 +115,7 @@ describe("SuggestionDiffEditor Utilities", () => {
                 afterCode: "line2\nline3",
             };
 
-            const result = calculateExpandedRegions(2, topOfFileData);
+            const result = calculateExpandedRegions(2, topOfFileData, false);
 
             expect(result).not.toBeNull();
             expect(result?.beforeCode).toBe("");

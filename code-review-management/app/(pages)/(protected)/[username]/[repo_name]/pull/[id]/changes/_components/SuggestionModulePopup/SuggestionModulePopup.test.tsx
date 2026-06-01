@@ -5,6 +5,7 @@ import { SuggestionModuleContent, SuggestionPopupProp } from "./SuggestionModule
 import { SuggestionDiffEditorProps } from "./_components/SuggestionDiffEditor";
 import { useUpdateGeminiSuggestionMutation } from "@/lib/api/mutations/useUpdateGeminiSuggestionMutation";
 import { useCommitGeminiSuggestionMutation } from "@/lib/api/mutations/useCommitGeminiSuggestionMutation";
+import { usePullQuery } from "@/lib/api/queries/usePullQuery";
 
 const mockUpdateMutate = jest.fn();
 const mockCommitMutate = jest.fn();
@@ -16,6 +17,18 @@ jest.mock("next/navigation", () => ({
     username: "owner",
     repo_name: "repo",
     id: "1",
+  }),
+}));
+
+jest.mock("@/lib/api/queries/usePullQuery", () => ({
+  usePullQuery: jest.fn(),
+}));
+
+jest.mock("@../../../_hooks/usePermissionChecks", () => ({
+  usePermissionChecks: jest.fn().mockReturnValue({
+    accessType: "write",
+    hasCommentPermission: true,
+    hasWritePermission: true,
   }),
 }));
 
@@ -90,6 +103,21 @@ describe("SuggestionModuleContent", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
+    (usePullQuery as jest.Mock).mockReturnValue({
+      data: {
+        id: 1,
+        number: 1,
+        state: "open",
+        title: "Refactor math utilities",
+        body: "This PR introduces suggestions for math.ts",
+        head: { ref: "feature/math-update" },
+        base: { ref: "main" },
+        user: { login: "test-user" },
+      },
+      isLoading: false,
+      isError: false,
+    });
+
     (useUpdateGeminiSuggestionMutation as jest.Mock).mockReturnValue({
       mutate: mockUpdateMutate,
       isPending: false
@@ -104,18 +132,22 @@ describe("SuggestionModuleContent", () => {
   it("renders the header and buttons correctly", () => {
     render(<SuggestionModuleContent {...defaultProps} />);
 
-    expect(screen.getByText("Suggestion on src/utils/math.ts")).toBeInTheDocument();
+    expect(screen.getByText("math.ts")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Update" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Commit" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Close popup" })).toBeInTheDocument();
   });
 
-  it("calls onXClicked when the close button is clicked", async () => {
-    const user = userEvent.setup();
+  it("renders Loading... state when pull data is loading or missing", () => {
+    // Override the global mock specifically for this test
+    (usePullQuery as jest.Mock).mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      isError: false,
+    });
+
     render(<SuggestionModuleContent {...defaultProps} />);
 
-    await user.click(screen.getByRole("button", { name: "Close popup" }));
-    expect(mockOnXClicked).toHaveBeenCalledTimes(1);
+    expect(screen.getByText("Loading...")).toBeInTheDocument();
   });
 
   it("shows pending states for Update and Commit buttons", () => {
@@ -217,7 +249,7 @@ describe("SuggestionModuleContent", () => {
     expect(mockOnXClicked).toHaveBeenCalledTimes(1);
   });
 
-    it("calls update mutation with carriage returns", async () => {
+  it("calls update mutation with carriage returns", async () => {
     const user = userEvent.setup();
     render(<SuggestionModuleContent {...carriageProps} />);
 
@@ -237,7 +269,7 @@ describe("SuggestionModuleContent", () => {
     });
   });
 
-    it("calls commit mutation with carriage returns", async () => {
+  it("calls commit mutation with carriage returns", async () => {
     const user = userEvent.setup();
 
     mockCommitMutate.mockImplementation((data, options) => {
