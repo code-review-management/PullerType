@@ -139,7 +139,7 @@ export function renderSideConflicts(
       zoneIds.set(block.id, zoneId);
     }
 
-    if (block.start !== block.end) {
+    if (block.start && block.end) {
       newDecorationsList.push({
         range: new monaco.Range(block.start, 1, block.end, 1),
         options: {

@@ -58,13 +58,15 @@ export default function Page() {
     <div className={styles.page}>
       <h1 className={styles.header}>Merge conflicts from {target_branch} </h1>
 
-      {isLoading && <div>Loading conflict data...</div>}
+      { isLoading && <div>Loading conflict data...</div> }
 
-      {isError && <div>{error?.message || "Error loading conflict data."}</div>}
+  { isError && <div>{error?.message || "Error loading conflict data."}</div> }
 
-      {conflictResolutionData && !isError && (
-        <ConflictResolution conflictResolutionProp={conflictResolutionData} />
-      )}
-    </div>
+  {
+    conflictResolutionData && !isError && (
+      <ConflictResolution conflictResolutionProp={conflictResolutionData} />
+    )
+  }
+    </div >
   );
 }
