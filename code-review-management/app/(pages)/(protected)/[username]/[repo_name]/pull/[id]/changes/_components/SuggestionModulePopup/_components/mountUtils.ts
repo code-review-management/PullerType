@@ -3,8 +3,6 @@ import { Monaco } from "@monaco-editor/react";
 import type { languages } from "monaco-editor";
 
 export const getLineCount = (str: string) => (str ? str.split("\n").length : 0);
-export const getLines = (str: string) => (str ? str.split("\n") : []);
-
 /**
  * Handles when a user clicks on the gutter. It adds the regions from the clicked lines
  * to the diff region into the suggestion block
@@ -15,11 +13,13 @@ export const getLines = (str: string) => (str ? str.split("\n") : []);
 export function calculateExpandedRegions(
   clickedLine: number,
   currentData: RegionData,
+  hasCarriageReturn: boolean,
 ): RegionData | null {
   const { beforeCode, originalCode, modifiedCode, afterCode } = currentData;
+  const splitToken = hasCarriageReturn ? '\r\n' : '\n';
 
-  const beforeArr = getLines(beforeCode);
-  const afterArr = getLines(afterCode);
+  const beforeArr = getLines(beforeCode, hasCarriageReturn);
+  const afterArr = getLines(afterCode, hasCarriageReturn);
 
   let newBeforeCode = beforeCode;
   let newAfterCode = afterCode;
@@ -27,7 +27,7 @@ export function calculateExpandedRegions(
   let newModifiedCode = modifiedCode;
 
   const startLine = beforeArr.length > 0 ? beforeArr.length + 1 : 1;
-  const endLine = startLine + getLines(modifiedCode).length - 1;
+  const endLine = startLine + getLines(modifiedCode, hasCarriageReturn).length - 1;
 
   if (clickedLine >= startLine && clickedLine <= endLine) {
     return null;
@@ -37,20 +37,21 @@ export function calculateExpandedRegions(
     const linesToTake = startLine - clickedLine;
     const shifted = beforeArr.splice(-linesToTake, linesToTake);
 
-    newBeforeCode = beforeArr.join("\n");
-    const shiftStr = shifted.join("\n");
+    newBeforeCode = beforeArr.join(splitToken);
+    const shiftStr = shifted.join(splitToken);
 
-    newOriginalCode = shiftStr + (originalCode ? "\n" + originalCode : "");
-    newModifiedCode = shiftStr + (modifiedCode ? "\n" + modifiedCode : "");
+    newOriginalCode = shiftStr && originalCode ? shiftStr + splitToken + originalCode : shiftStr || originalCode;
+    newModifiedCode = shiftStr && modifiedCode ? shiftStr + splitToken + modifiedCode : shiftStr || modifiedCode;
   } else if (clickedLine > endLine) {
     const linesToTake = clickedLine - endLine;
+    console.log("Lines to take: " + linesToTake)
     const shifted = afterArr.splice(0, linesToTake);
 
-    newAfterCode = afterArr.join("\n");
-    const shiftStr = shifted.join("\n");
+    newAfterCode = afterArr.join(splitToken);
+    const shiftStr = shifted.join(splitToken);
 
-    newOriginalCode = (originalCode ? originalCode + "\n" : "") + shiftStr;
-    newModifiedCode = (modifiedCode ? modifiedCode + "\n" : "") + shiftStr;
+    newOriginalCode = originalCode && shiftStr ? originalCode + splitToken + shiftStr : originalCode || shiftStr;
+    newModifiedCode = modifiedCode && shiftStr ? modifiedCode + splitToken + shiftStr : modifiedCode || shiftStr;
   }
 
   return {
@@ -107,3 +108,12 @@ export const vsCodeLightPlus = {
     "editor.inactiveSelectionBackground": "#E5EBF1",
   },
 };
+
+
+function getLines(fileContent: string, hasCarriageReturn: boolean): string[] {
+  const splitToken = hasCarriageReturn ? '\r\n' : '\n';
+
+  if (!fileContent) return [];
+
+  return fileContent.split(splitToken);
+}

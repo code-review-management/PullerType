@@ -57,6 +57,11 @@ jest.mock("./_components/PRHeader/PRHeader", () => ({
   default: () => <div data-testid="pull-page-content">Pull page</div>,
 }));
 
+jest.mock("@components/LoadingSpinner/LoadingSpinner", () => ({
+  __esModule: true,
+  default: () => <div data-testid="loading-spinner" />,
+}));
+
 describe("Pull page", () => {
   it("renders", () => {
     render(<Pull />);

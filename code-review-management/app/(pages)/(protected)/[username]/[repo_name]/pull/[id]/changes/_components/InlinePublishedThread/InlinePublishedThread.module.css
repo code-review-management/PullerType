@@ -17,8 +17,20 @@
   padding: var(--spacer-12);
 }
 
-.notificationText {
-  font-size: 22px;
-  color: var(--text-primary);
-  font-family: var(--font-roboto);
+.chip {
+  padding: var(--spacer-2) var(--spacer-6);
+  border-radius: var(--spacer-12);
+  font-size: 0.625rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.outdated {
+  background-color: rgba(var(--thread-status-outdated-rgb), 0.12);
+  color: var(--thread-status-outdated);
+}
+
+.detached {
+  background-color: rgba(var(--thread-status-detached-rgb), 0.12);
+  color: var(--thread-status-detached);
 }

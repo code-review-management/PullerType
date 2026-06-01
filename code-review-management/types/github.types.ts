@@ -379,7 +379,7 @@ export const TimelineEventSchema = z
     StateChangeEventSchema, // event: closed, merged, reopened
   ])
   .nullable();
-
+  
 export const FileContentSchema = z.object({
   type: z.literal("file"),
   encoding: z.string(),
@@ -389,34 +389,34 @@ export const FileContentSchema = z.object({
   content: z.string(),
   sha: z.string(),
   url: z.url(),
-  git_url: z.url().nullable().optional(),
-  html_url: z.url().nullable().optional(),
-  download_url: z.string().url().nullable().optional(),
+  git_url: z.url().nullish(),
+  html_url: z.url().nullish(),
+  download_url: z.url().nullish(),
   _links: z
     .object({
-      git: z.url().nullable().optional(),
+      git: z.url().nullish(),
       self: z.url(),
-      html: z.url().nullable().optional(),
+      html: z.url().nullish(),
     })
     .optional(),
 });
 
 export const GitHubFileContentSchema = z.object({
   type: z.string(),
-  encoding: z.string().optional(),
+  encoding: z.string().nullish(),
   size: z.number(),
   name: z.string(),
   path: z.string(),
-  content: z.string().optional(),
+  content: z.string().nullish(),
   sha: z.string(),
   url: z.string(),
-  git_url: z.string().nullable(),
-  html_url: z.string().nullable(),
-  download_url: z.string().nullable(),
+  git_url: z.string().nullish(),
+  html_url: z.string().nullish(),
+  download_url: z.string().nullish(),
   _links: z.object({
-    git: z.string().nullable(),
+    git: z.string().nullish(),
     self: z.string(),
-    html: z.string().nullable(),
+    html: z.string().nullish(),
   }),
 });
 
@@ -424,6 +424,7 @@ export const GitHubFileDataSchema = z.union([
   GitHubFileContentSchema,
   z.array(GitHubFileContentSchema),
 ]);
+
 export const IssueCommentSchema = z.object({
   id: z.number(),
   body: z.string().optional(),

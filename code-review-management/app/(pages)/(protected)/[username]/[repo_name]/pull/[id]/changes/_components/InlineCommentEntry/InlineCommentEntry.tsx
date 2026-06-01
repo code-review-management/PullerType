@@ -55,12 +55,12 @@ export default function InlineCommentEntry({
   const suggestiveComment: SuggestiveComment = defaultContent
     ? extractSuggestions(defaultContent)
     : {
-        hasSuggestion: false,
-        relativeStartLine: 0,
-        deletionContent: "",
-        additionContent: "",
-        isCommited: false,
-      };
+      hasSuggestion: false,
+      relativeStartLine: 0,
+      deletionContent: "",
+      additionContent: "",
+      isCommited: false,
+    };
 
   if (!activePath) activePath = "";
   if (suggestiveComment.hasSuggestion) {

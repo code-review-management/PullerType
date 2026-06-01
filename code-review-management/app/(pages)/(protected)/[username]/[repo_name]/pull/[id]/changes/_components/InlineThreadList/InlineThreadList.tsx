@@ -22,7 +22,6 @@ export default function InlineThreadList({
   change,
   publishedThreadsBySide,
   draftThreadsBySide,
-  activePath,
 }: {
   change: ChangeData;
   publishedThreadsBySide: {
@@ -33,23 +32,19 @@ export default function InlineThreadList({
     left?: DraftThreadItem | null;
     right?: DraftThreadItem | null;
   };
-  activePath: string;
 }) {
   if (change.type === "delete") {
     return (
       <ThreadList
         publishedThreads={publishedThreadsBySide.left}
         draftThread={draftThreadsBySide.left}
-        activePath={activePath}
       />
     );
   } else if (change.type === "insert") {
-    console.log("Inside thread inline: " + publishedThreadsBySide.right.length);
     return (
       <ThreadList
         publishedThreads={publishedThreadsBySide.right}
         draftThread={draftThreadsBySide.right}
-        activePath={activePath}
       />
     );
   } else {
@@ -60,14 +55,12 @@ export default function InlineThreadList({
           <ThreadList
             publishedThreads={publishedThreadsBySide.left}
             draftThread={draftThreadsBySide.left}
-            activePath={activePath}
           />
         </div>
         <div className={styles.normalLineSide}>
           <ThreadList
             publishedThreads={publishedThreadsBySide.right}
             draftThread={draftThreadsBySide.right}
-            activePath={activePath}
           />
         </div>
       </div>
@@ -81,27 +74,22 @@ export default function InlineThreadList({
  *
  * @param publishedThreads: List of published threads to render.
  * @param draftThread: Draft thread to render, or null if none exists.
- * @param activePath: Filename of the file the thread is on. Used to get keyword highlighting for the suggestions
  */
 export function ThreadList({
   publishedThreads,
-  draftThread,
-  activePath,
+  draftThread
 }: {
   publishedThreads: PublishedThreadItem[];
   draftThread?: DraftThreadItem | null;
-  activePath: string;
 }) {
   return (
     <div className={styles.list}>
       {publishedThreads.map((publishedThread) => {
-        console.log("published thread!");
         return (
           <InlinePublishedThread
             key={publishedThread.id}
             thread={publishedThread}
             viewType="inline"
-            activePath={activePath}
           />
         );
       })}

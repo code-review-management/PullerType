@@ -1,28 +1,10 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacer-12);
-    margin: var(--spacer-12) 0;
-    overflow: hidden;
-    box-shadow: var(--box-shadow-soft);
-}
-
-.deletion {
-    font-size: var(--font-size-diff-code);
-    margin: 0; 
-    padding: '12px'; 
-    overflowX: 'auto';
-    color: var(--text-secondary);
-    background-color: red;
-}
-
-.replacement {
-    font-size: var(--font-size-diff-code);
-    margin: 0; 
-    padding: '12px'; 
-    overflowX: 'auto';
-    color: var(--text-secondary);
-    background-color: green;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-12);
+  margin: var(--spacer-12) 0;
+  overflow: hidden;
+  box-shadow: var(--box-shadow-soft);
 }
 
 .formalHeader {
@@ -35,7 +17,8 @@
   border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
   font-size: var(--font-size-label);
-  flex-wrap: wrap; /* Allows items to wrap nicely on extremely tiny screens */
+  flex-wrap: wrap;
+  overflow-x: auto;
 }
 
 .headerTitle {
@@ -45,16 +28,14 @@
   white-space: nowrap;
 }
 
-.buttonContainer{
+.buttonContainer {
   display: flex;
   align-items: center;
   gap: var(--spacer-12);
-  margin-left: auto; 
+  margin-left: auto;
 }
 
-/* The Segmented Control Toggle */
 .toggleGroup {
-  /* Removed complex auto margins */
   margin: 0;
   display: flex;
   background-color: #ebecf0;
@@ -92,7 +73,6 @@
   border: 1px solid var(--border-gray);
   background-color: var(--background-light);
   padding: var(--spacer-4) var(--spacer-8);
-  /* Removed margins, handled by parent gap */
   margin: 0;
   white-space: nowrap;
 }
@@ -120,8 +100,8 @@
   border: 1px solid #444;
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-  
-  overflow: hidden; 
+
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -131,7 +111,7 @@
 }
 
 .commitedContainer {
-  margin: 0; 
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -154,4 +134,9 @@
   padding: 2px var(--spacer-8);
   font-size: var(--font-size-label);
   white-space: nowrap;
+}
+
+.codeContainer {
+  overflow-x: auto;
+  max-width: 100%;
 }

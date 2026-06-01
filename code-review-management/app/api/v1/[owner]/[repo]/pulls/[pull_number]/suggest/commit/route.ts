@@ -15,7 +15,7 @@ type RouteContext = {
   params: Promise<{
     owner: string;
     repo: string;
-    pull_number: number;
+    pull_number: string;
   }>;
 };
 
@@ -31,7 +31,7 @@ export async function POST(req: Request, context: RouteContext) {
 
   // Validate token
   if (token == null || token.accessToken == null || token.githubId == null) {
-    console.log("Unauthorized request at ${new Date()}");
+    console.log(`Unauthorized request at ${new Date()}`);
     return new Response(null, { status: 401 });
   }
 
@@ -55,7 +55,7 @@ export async function POST(req: Request, context: RouteContext) {
     const pullRequestResponse = await octokit.rest.pulls.get({
       owner,
       repo,
-      pull_number,
+      pull_number: Number(pull_number),
     });
 
     const pullRequest = PullRequestSchema.parse(pullRequestResponse.data);
@@ -77,26 +77,33 @@ export async function POST(req: Request, context: RouteContext) {
       return new Response("No SHA at PR head", { status: 400 });
     }
 
-    await Promise.all([
-      octokit.rest.repos.createOrUpdateFileContents({
-        owner,
-        repo,
-        path: filename,
-        message: "Commiting suggestion",
-        content: encodedContent,
-        sha: fileSha,
-        branch: branchName,
-      }),
-      updateGeminiComment(octokit, owner, repo, suggestionData, true),
-    ]);
+    await octokit.rest.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: filename,
+      message: "Committing suggestion",
+      content: encodedContent,
+      sha: fileSha,
+      branch: branchName,
+    })
+
+    await updateGeminiComment(octokit, owner, repo, suggestionData, true);
 
     return new Response(JSON.stringify({ message: "Success" }), {
       status: 200,
     });
   } catch (error) {
     if (error instanceof RequestError && error.status) {
-      // Octokit Http error
-      return new Response(error.message, { status: error.status });
+      return new Response(
+        JSON.stringify({
+          message: "Failed to apply suggestion",
+          error: error instanceof Error ? error.message : "Unknown error"
+        }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     } else {
       // Parsing/other error
       return new Response("Server error: " + error, { status: 500 });

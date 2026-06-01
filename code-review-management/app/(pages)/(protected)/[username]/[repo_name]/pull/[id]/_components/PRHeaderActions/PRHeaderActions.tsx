@@ -9,6 +9,7 @@ import CommitPicker from "../../changes/_components/CommitPicker/CommitPicker";
 import HeaderButton from "@components/HeaderButton/HeaderButton";
 import MergePopover from "../MergePopover/MergePopover";
 import PRHeaderPopoverButton from "../PRHeaderPopoverButton/PRHeaderPopoverButton";
+import { useParams } from "next/navigation";
 
 type PRHeaderPopovers = "review" | "merge" | "commit";
 
@@ -32,7 +33,10 @@ export default function PRHeaderActions({
   pull: PullRequest;
   showCommitPicker?: boolean;
 }) {
-  const [activePopover, setActivePopover] = useState<PRHeaderPopovers | null>(null);
+  const [activePopover, setActivePopover] = useState<PRHeaderPopovers | null>(
+    null,
+  );
+  const { username, repo_name, id } = useParams();
   const { hasCommentPermission, hasWritePermission } = usePermissionChecks();
 
   const togglePopover = (popover: PRHeaderPopovers) => {
@@ -43,7 +47,13 @@ export default function PRHeaderActions({
   const toggleCommit = () => togglePopover("commit");
 
   const showReviewButton = hasCommentPermission;
-  const showMergeButton = hasWritePermission && !pull.merged && pull.state === "open";
+  const showMergeButton =
+    hasWritePermission && !pull.merged && pull.state === "open";
+
+  const showResolveButton =
+    hasWritePermission && pull.state === "open" && pull.mergeable_state === "dirty" && pull.head && pull.base;
+  const resolutionHRef = showResolveButton ? `/${username}/${repo_name}/pull/${id}/conflict-resolution?target_branch=${pull.base?.ref}&feature_branch=${pull.head?.ref}` : "";
+
   const isMergeDisabled = !canMerge(pull);
 
   return (
@@ -65,24 +75,32 @@ export default function PRHeaderActions({
           buttonLabel="Add review"
           buttonVariant="secondary"
           isPopoverOpen={activePopover === "review"}
-          popoverContent={<AddReviewPopover pull={pull} togglePopover={toggleReview} />}
+          popoverContent={
+            <AddReviewPopover pull={pull} togglePopover={toggleReview} />
+          }
           onToggle={toggleReview}
         />
       )}
-      {showMergeButton && (
+      {showMergeButton && !showResolveButton && (
         <PRHeaderPopoverButton
           buttonLabel="Merge"
           isPopoverOpen={activePopover === "merge"}
-          popoverContent={<MergePopover pull={pull} togglePopover={toggleMerge} />}
+          popoverContent={
+            <MergePopover pull={pull} togglePopover={toggleMerge} />
+          }
           onToggle={toggleMerge}
-          // TODO: Also disable if the user does not have appropriate write permissions.
           isDisabled={isMergeDisabled}
           {...(isMergeDisabled && {
-            // TODO: Replace with more descriptive message.
             tooltip: "Pull request cannot be merged",
           })}
         />
       )}
+      {showResolveButton && (
+        <HeaderButton href={resolutionHRef} variant="tertiary">
+          {"Resolve"}
+        </HeaderButton>
+      )
+      }
     </>
   );
 }

@@ -6,6 +6,9 @@ import { useUpdateGeminiSuggestionMutation } from "@/lib/api/mutations/useUpdate
 import { useParams } from "next/navigation";
 import { PullParams } from "@/types/routing.types";
 import { useCommitGeminiSuggestionMutation } from "@/lib/api/mutations/useCommitGeminiSuggestionMutation";
+import { usePermissionChecks } from "../../../_hooks/usePermissionChecks";
+import { usePullQuery } from "@/lib/api/queries/usePullQuery";
+import { getPullState } from "../../../_utils/pull-utils";
 
 export interface SuggestionPopupProp {
   commentID: number;
@@ -35,10 +38,11 @@ export function SuggestionModuleContent({
     useUpdateGeminiSuggestionMutation(username, repo_name, id);
   const { mutate: commitMutation, isPending: isCommitPending } =
     useCommitGeminiSuggestionMutation(username, repo_name, id);
+  const { data: pull, isLoading: isLoading } = usePullQuery(username, repo_name, id);
 
-  const hasCarriageReturn: boolean = fullFileCode.indexOf("\r") !== -1;
+  const justFilename: string = filename.split('/').pop() || filename;
+  const hasCarriageReturn: boolean = fullFileCode.indexOf('\r') !== -1;
   const joinToken: string = hasCarriageReturn ? "\r\n" : "\n";
-
   const [updateChanges, setUpdateChanges] = useState(false);
   const [beforeCode, setBeforeCode] = useState(() => {
     const lines = fullFileCode.split(/\r?\n/);
@@ -51,9 +55,25 @@ export function SuggestionModuleContent({
     return lines.slice(replaceEndLine).join(joinToken);
   });
 
-  const [originalCode, setOriginalCode] = useState(deletionContent);
-  const [modifiedCode, setModifiedCode] = useState(additionContent);
+  const cleanedOriginalCode = hasCarriageReturn
+    ? deletionContent.replace(/\r?\n/g, "\r\n")
+    : deletionContent.replace(/\r/g, "");
 
+  const cleanedModifiedCode = hasCarriageReturn ?
+    additionContent.replace(/\r?\n/g, "\r\n")
+    : additionContent.replace(/\r/g, "");
+  const [originalCode, setOriginalCode] = useState(cleanedOriginalCode);
+  const [modifiedCode, setModifiedCode] = useState(cleanedModifiedCode);
+
+  const permissionChecks = usePermissionChecks();
+
+  // We make it return early while getting the pull state so nothing can render if need be
+  if (isLoading || !pull) {
+    return <div>Loading...</div>
+  }
+
+  const state = getPullState(pull);
+  const isOpen: boolean = (state !== "merged") && (state !== "closed");
   /**
    *  This is the function we send to components to report back to this component
    *  if a change was made. It updates the code regions (bound changes also effect code)
@@ -87,7 +107,7 @@ export function SuggestionModuleContent({
   const onUpdateClicked = () => {
     if (!updateChanges) return;
 
-    const beforeCodeLength: number = beforeCode.split("\n").length;
+    const beforeCodeLength: number = (beforeCode) ? beforeCode.split("\n").length : 0;
     const relativeLineLocation: number = beforeCodeLength + 1 - threadLine;
 
     const cleanedOriginalCode = hasCarriageReturn
@@ -162,29 +182,26 @@ export function SuggestionModuleContent({
   return (
     <div className={styles.moduleContainer}>
       <div className={styles.popupHeader}>
-        <div className={styles.popupLabel}>{"Suggestion on " + filename}</div>
-        <div className={styles.buttonContainer}>
-          <button
-            className={
-              updateChanges
-                ? styles.updateButtonValid
-                : styles.updateButtonInvalid
-            }
-            onClick={onUpdateClicked}
-          >
-            {isUpdatePending ? "Updating..." : "Update"}
-          </button>
-          <button className={styles.commitButton} onClick={onCommitClicked}>
-            {isCommitPending ? "Committing..." : "Commit"}
-          </button>
-          <button
-            className={styles.closeButton}
-            onClick={onXClicked}
-            aria-label="Close popup"
-          >
-            ✕
-          </button>
+        <div className={styles.popupLabel} title={filename}>
+          {justFilename}
         </div>
+        {permissionChecks.hasWritePermission && isOpen && (
+          <>
+            <button
+              className={
+                updateChanges
+                  ? styles.updateButtonValid
+                  : styles.updateButtonInvalid
+              }
+              onClick={onUpdateClicked}
+            >
+              {isUpdatePending ? "Updating..." : "Update"}
+            </button>
+            <button className={styles.commitButton} onClick={onCommitClicked}>
+              {isCommitPending ? "Committing..." : "Commit"}
+            </button>
+          </>
+        )}
       </div>
 
       <div className={styles.editorContainer}>

@@ -30,6 +30,7 @@
 .buttonContainer {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .closeButton {
@@ -52,8 +53,13 @@
   color: var(--text-primary);
   font-size: 20px;
   font-weight: 500;
-  display: flex;
+  display: block;
+  flex: 1 1 auto;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .updateButtonInvalid {

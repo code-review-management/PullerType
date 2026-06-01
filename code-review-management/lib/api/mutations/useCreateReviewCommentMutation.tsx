@@ -40,7 +40,6 @@ export function useCreateReviewCommentMutation(
       await queryClient.invalidateQueries({
         queryKey: ["review-comments", owner, repo, pullNumber],
       });
-      toast.success("Suggestion made!");
     },
     onError: (error) => {
       const message = "Failed to post comment.";

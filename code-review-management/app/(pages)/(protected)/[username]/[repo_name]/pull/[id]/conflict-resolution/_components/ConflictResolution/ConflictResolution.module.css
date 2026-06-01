@@ -1,0 +1,275 @@
+/* Variables we use for window themeing */
+.conflictResolution {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  --frame-bg: var(--background-light);
+  --tab-inactive-hover: #f1f3f4;
+  --tab-text-inactive: #5f6368;
+
+  --tab-active-bg: #dadde2;
+  --tab-text-active: #202124;
+
+  --pane-border: #cccccc;
+  --pane-header-bg: var(--tab-active-bg);
+  --pane-header-color: #202124;
+}
+
+/* Dark theme is not avaiable for now */
+.conflictResolution[data-theme="dark"] {
+  --frame-bg: #2d2d2d;
+  --tab-inactive-hover: #333333;
+  --tab-text-inactive: #9aa0a6;
+
+  --tab-active-bg: #1e1e1e;
+  --tab-text-active: #f1f3f4;
+
+  --pane-border: #3c3c3c;
+  --pane-header-bg: var(--tab-active-bg);
+  --pane-header-color: #f1f3f4;
+}
+
+/* ========================================
+   BROWSER TAB LAYOUT
+   ======================================== */
+.fileTabBar {
+  display: flex;
+  background-color: var(--frame-bg);
+  overflow-x: auto;
+  padding: 8px var(--spacer-12) 0;
+  align-items: flex-end; /* Pushes tabs flush against the bottom */
+  scrollbar-width: none; /* Hides scrollbar */
+}
+.fileTabBar::-webkit-scrollbar {
+  display: none;
+}
+
+.tabButton {
+  position: relative;
+  background: transparent; /* Inherits frame-bg */
+  color: var(--tab-text-inactive);
+  border: none;
+  border-radius: 8px 8px 0 0;
+  font-size: 18px;
+  padding: 12px 24px;
+  margin-right: 0; /* No gap so borders work cleanly */
+  cursor: pointer;
+  font-family: inherit;
+  outline: none;
+  transition:
+    background 0.2s,
+    color 0.2s;
+  z-index: 1;
+}
+
+.tabButton:hover:not(.activeTab) {
+  background-color: var(--tab-inactive-hover);
+}
+
+.activeTab {
+  background-color: var(--tab-active-bg);
+  color: var(--tab-text-active);
+  z-index: 2;
+}
+
+/* --- Active Tab Outward Curves (Flares) --- */
+.activeTab::before,
+.activeTab::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+.activeTab::before {
+  left: -16px;
+  background: radial-gradient(
+    circle at top left,
+    transparent 16px,
+    var(--tab-active-bg) 16.5px
+  );
+}
+
+.activeTab::after {
+  right: -16px;
+  background: radial-gradient(
+    circle at top right,
+    transparent 16px,
+    var(--tab-active-bg) 16.5px
+  );
+}
+
+/* --- Partial Vertical Borders (Separators) --- */
+/* Right side of every inactive tab */
+.tabButton:not(.activeTab)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 25%;
+  height: 50%;
+  width: 2px;
+  background-color: var(--pane-header-bg);
+  z-index: 3;
+  transition: opacity 0.2s ease;
+}
+
+/* Left side ONLY for the very first tab (if inactive) */
+.tabButton:first-of-type:not(.activeTab)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 25%;
+  height: 50%;
+  width: 3px;
+  background-color: var(--pane-header-bg);
+  z-index: 3;
+  transition: opacity 0.2s ease;
+}
+
+/* Hide separators based on adjacent states */
+.tabButton:has(+ .activeTab)::after,
+.tabButton:hover::after,
+.tabButton:has(+ .tabButton:hover)::after {
+  opacity: 0;
+}
+
+.tabButton:first-of-type:hover::before {
+  opacity: 0;
+}
+
+/* ========================================
+   MERGE LAYOUT PANES
+   ======================================== */
+.completeMergeButton {
+  margin-left: auto;
+  align-self: center;
+  margin-bottom: 8px;
+}
+
+.completeMergeButtonText {
+  font-size: 22px;
+}
+
+.loadingText {
+  display: inline-block;
+  font-size: 22px;
+  text-align: center;
+  min-width: 80px;
+}
+
+.loadingText::after {
+  content: ".";
+  animation: dots 0.75s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%,
+  20% {
+    content: ".";
+  }
+  40% {
+    content: "..";
+  }
+  60% {
+    content: "...";
+  }
+  80%,
+  100% {
+    content: "";
+  }
+}
+
+.mergeLayout {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.topHalf {
+  display: flex;
+  flex: 1;
+  border-bottom: 2px solid var(--pane-border);
+}
+
+.splitPaneLeft {
+  flex: 1;
+  border-right: 1px solid var(--pane-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.splitPaneRight,
+.bottomHalf {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.paneHeader {
+  padding: 8px 16px;
+  font-weight: 500;
+  background-color: var(--pane-header-bg);
+  color: var(--pane-header-color);
+}
+
+/* ========================================
+   ORIGINAL EDITOR/WIDGET STYLES
+   ======================================== */
+.container {
+  min-height: 600px;
+}
+
+.currentStrong {
+  background: #158c3b8e;
+}
+
+.current {
+  background: #158c3b35;
+}
+
+.incoming {
+  background: #1b4f9d35;
+}
+
+.incomingStrong {
+  background: #1b4f9d8e;
+}
+
+.viewZone {
+  padding: 8px;
+}
+
+.conflictWidget {
+  display: flex !important;
+  width: 400px;
+  font-size: 12px;
+  gap: 10px;
+}
+
+.conflictWidgetButton {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.conflictWidgetButton:hover {
+  color: #3346d6;
+}
+
+@media (prefers-color-scheme: dark) {
+  .conflictWidgetButton:hover {
+    color: #949cd1;
+  }
+}
+
+.buttonDivider {
+  cursor: default;
+  user-select: none;
+}
+
+.resolvedHighlight {
+  background-color: rgba(46, 160, 67, 0.2);
+}

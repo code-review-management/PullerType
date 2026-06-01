@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { poster } from "../utils/poster";
-import { SuggestionCommentUpdateRequest, SuggestionCommitRequest } from "@/types/request.types";
+import { SuggestionCommitRequest } from "@/types/request.types";
 import toast from "react-hot-toast";
 
 /**
@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
  * @param owner: Owner of the repository.
  * @param repo: Name of the repository.
  * @param pullNumber: Pull request number.
- * @returns: TanStack query result containing the merge result.
+ * @returns: TanStack query result committing suggestion block.
  */
 export function useCommitGeminiSuggestionMutation(
   owner: string,
@@ -29,7 +29,11 @@ export function useCommitGeminiSuggestionMutation(
       await queryClient.invalidateQueries({
         queryKey: ["review-comments", owner, repo, pullNumber],
       });
-      toast.success("Suggestion successfully commited!");
+      queryClient.invalidateQueries({
+        queryKey: ["timeline", owner, repo, pullNumber],
+      });
+
+      toast.success("Suggestion successfully committed, refresh to see changes!", { duration: 10000 });
     },
     onError: () => {
       toast.error("Failed to commit suggestion.");

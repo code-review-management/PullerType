@@ -7,7 +7,7 @@ import { fetcher } from "@/lib/api/utils/fetcher";
  * @param owner: Owner of the repository.
  * @param repo: Name of the repository.
  * @param pullNumber: Pull request number.
- * @returns: TanStack query result containing the diff-string.
+ * @returns: TanStack query result containing the content of the file.
  */
 export function useFileContentQuery(
   owner: string,
@@ -16,7 +16,7 @@ export function useFileContentQuery(
   path: string,
 ) {
   return useQuery({
-    queryKey: ["file-diffs", owner, repo, pullNumber, path],
+    queryKey: ["file-content", owner, repo, pullNumber, path],
     queryFn: async (): Promise<string> => {
       const encodedPath = encodeURIComponent(path);
       return fetcher(

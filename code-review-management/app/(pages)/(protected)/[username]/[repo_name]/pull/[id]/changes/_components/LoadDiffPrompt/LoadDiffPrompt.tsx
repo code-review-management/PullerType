@@ -18,7 +18,11 @@ export default function LoadDiffPrompt({
       <button className={styles.load} onClick={() => setIsDiffLoaded(true)}>
         Load diff
       </button>
-      {reason && <p className={styles.description}>{getDescription(reason)}</p>}
+      {reason && (
+        <p className={styles.description} data-testid="description">
+          {getDescription(reason)}
+        </p>
+      )}
     </div>
   );
 }

@@ -12,6 +12,7 @@
 
 .normalLineSide {
     flex: 1;
+    min-width: 0;
 }
 
 .normalLineColumns > .normalLineSide:first-child {

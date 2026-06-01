@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
  * @param owner: Owner of the repository.
  * @param repo: Name of the repository.
  * @param pullNumber: Pull request number.
- * @returns: TanStack query result containing the merge result.
+ * @returns: TanStack query updating the suggestion comment.
  */
 export function useUpdateGeminiSuggestionMutation(
   owner: string,
@@ -29,7 +29,7 @@ export function useUpdateGeminiSuggestionMutation(
       queryClient.invalidateQueries({
         queryKey: ["review-comments", owner, repo, pullNumber],
       });
-      toast.success("Suggestion successfully updated!.");
+      toast.success("Suggestion successfully updated!");
     },
     onError: () => {
       toast.error("Failed to update suggestion.");

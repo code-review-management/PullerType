@@ -1,0 +1,77 @@
+/* Base styles remain exactly the same */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(
+    0,
+    0,
+    0,
+    0.5
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.popupContainer {
+  background: var(--background-light);
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  animation: flyUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes flyUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.icon {
+  font-size: 128px;
+  margin-bottom: 16px;
+}
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+.message {
+  font-size: 22px;
+  color: #595959;
+  margin: 0 0 24px 0;
+}
+.actionContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Dark Mode (for now disabled) */
+.darkTheme {
+  background: #1e1e1e;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* Deeper shadow for dark background */
+  border: 1px solid #333333; /* Subtle border helps define the edges on dark screens */
+}
+
+/* Update text colors when inside the dark theme */
+.darkTheme .title {
+  color: #f1f1f1;
+}
+
+.darkTheme .message {
+  color: #a0a0a0;
+}

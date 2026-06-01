@@ -1,4 +1,4 @@
-export function IsSuggestionOutdated(
+export function isSuggestionOutdated(
   fileContent: string,
   deletionContent: string,
   adjustedStartLine: number,
@@ -10,7 +10,7 @@ export function IsSuggestionOutdated(
   const cleanedDeletionContent = deletionContent.replace(/\r/g, "");
 
   const fileLines = cleanedFileContent.split("\n");
-  const fileLineLength = cleanedFileContent.length;
+  const fileLineLength = fileLines.length;
   const deletionLines = cleanedDeletionContent.split("\n");
 
   for (let i = 0; i < deletionLines.length; i++) {
@@ -18,7 +18,7 @@ export function IsSuggestionOutdated(
     if (fileIndex >= fileLineLength) return true;
 
     if (deletionLines[i] !== fileLines[fileIndex]) {
-        return true;
+      return true;
     }
   }
 

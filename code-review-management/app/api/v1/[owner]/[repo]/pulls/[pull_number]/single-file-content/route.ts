@@ -31,7 +31,7 @@ export async function GET(req: Request, context: RouteContext) {
 
   // Validate token
   if (token == null || token.accessToken == null || token.githubId == null) {
-    console.log("Unauthorized request at ${new Date()}");
+    console.log(`Unauthorized request at ${new Date()}`);
     return new Response(null, { status: 401 });
   }
 
@@ -59,11 +59,12 @@ export async function GET(req: Request, context: RouteContext) {
   }
 
   try {
+    const castedPullNumber: number = Number(pull_number);
     const octokit = new Octokit({ auth: token.accessToken });
     const pullRequestResponse = await octokit.rest.pulls.get({
       owner,
       repo,
-      pull_number: Number(pull_number),
+      pull_number: castedPullNumber,
     });
 
     const pullRequest = PullRequestSchema.parse(pullRequestResponse.data);

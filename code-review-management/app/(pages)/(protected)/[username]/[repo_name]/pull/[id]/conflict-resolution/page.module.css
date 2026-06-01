@@ -1,0 +1,14 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: var(--spacer-12);
+}
+
+.monaco-editor,
+.monaco-editor * {
+  font-family: var(--font-roboto-mono);
+}

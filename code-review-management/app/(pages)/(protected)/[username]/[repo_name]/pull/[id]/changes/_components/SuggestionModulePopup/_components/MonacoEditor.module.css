@@ -1,0 +1,43 @@
+/* MonacoEditor.module.css */
+
+/*
+  Monaco editor styling can be difficult to work with, and especially to overwrite.
+  These overrides are scoped to the editor container but applied globally to Monaco's dynamically generated DOM nodes.
+*/
+.editorContainer {
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    height: 100vh;
+}
+
+/* This is the override for the read only dim region */
+.editorContainer :global(.monaco-editor .view-overlays .readOnlyBackgroundDim.readOnlyBackgroundDim) {
+    background-color: rgba(128, 128, 128, 0.2) !important;
+}
+
+/* This is the override for the modified suggestion code (right side) */
+.editorContainer :global(.monaco-editor .view-overlays .modifiedBlockBg.modifiedBlockBg) {
+    background-color: rgba(46, 160, 67, 0.12) !important;
+}
+
+.editorContainer :global(.monaco-editor .view-overlays .modifiedBlockTop.modifiedBlockTop) {
+    border-top: 4px solid rgba(46, 160, 67, 1) !important;
+}
+
+.editorContainer :global(.monaco-editor .view-overlays .modifiedBlockBottom.modifiedBlockBottom) {
+    border-bottom: 4px solid rgba(46, 160, 67, 1) !important;
+}
+
+/* This is the override for the original code to be deleted (left side) */
+.editorContainer :global(.monaco-editor .view-overlays .originalBlockBg.originalBlockBg) {
+    background-color: rgba(248, 81, 73, 0.12) !important;
+}
+
+.editorContainer :global(.monaco-editor .view-overlays .originalBlockTop.originalBlockTop) {
+    border-top: 4px solid rgba(248, 81, 73, 1) !important;
+}
+
+.editorContainer :global(.monaco-editor .view-overlays .originalBlockBottom.originalBlockBottom) {
+    border-bottom: 4px solid rgba(248, 81, 73, 1) !important;
+}

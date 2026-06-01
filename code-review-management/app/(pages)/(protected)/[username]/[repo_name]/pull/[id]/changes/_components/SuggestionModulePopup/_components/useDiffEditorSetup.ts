@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useLayoutEffect } from "react";
 import type { editor } from "monaco-editor";
 import { DiffOnMount } from "@monaco-editor/react";
 import { SuggestionDiffEditorProps, RegionData } from "./SuggestionDiffEditor";
@@ -15,7 +15,7 @@ import styles from "./SuggestionDiffEditor.module.css";
  * This includes the decorative regions, line gutter clicking, bounds enforcing, and code change
  * This also intiliazes style choises of the editor such as themeing and language
  * @param props Contians information about the suggestion, mostly the code regions, file information,
- *              and a function to update regions
+ * and a function to update regions
  * @returns It returns the function that will be run on the mount of the editor
  */
 export function useDiffEditorSetup(
@@ -34,15 +34,18 @@ export function useDiffEditorSetup(
   const hoveredLineRef = useRef<number | null>(null);
   const hoverDecorationsRef =
     useRef<editor.IEditorDecorationsCollection | null>(null);
-
-  // We store the updater function so React can trigger Monaco to redraw
   const updateDecorationsRef = useRef<(() => void) | null>(null);
 
+  // Pre-calculate initial boundaries so they are ready on first mount
+  const initialBeforeLines = getLineCount(beforeCode);
+  const initialAfterLines = getLineCount(afterCode);
+  const initialStartLine = initialBeforeLines > 0 ? initialBeforeLines + 1 : 1;
+
   const boundariesRef = useRef({
-    start: 1,
-    end: 1,
-    originalEnd: 1,
-    afterLines: 0,
+    start: initialStartLine,
+    end: initialStartLine + getLineCount(modifiedCode) - 1,
+    originalEnd: initialStartLine + getLineCount(originalCode) - 1,
+    afterLines: initialAfterLines,
   });
 
   const latestPropsRef = useRef<RegionData>({
@@ -52,7 +55,7 @@ export function useDiffEditorSetup(
     afterCode,
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     latestPropsRef.current = {
       beforeCode,
       originalCode,
@@ -70,14 +73,28 @@ export function useDiffEditorSetup(
       originalEnd: startLine + getLineCount(originalCode) - 1,
       afterLines: afterLines,
     };
+  }, [beforeCode, originalCode, modifiedCode, afterCode]);
 
-    if (updateDecorationsRef.current) {
-      updateDecorationsRef.current();
-    }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (updateDecorationsRef.current) {
+        updateDecorationsRef.current();
+      }
+    }, 50);
+    return () => clearTimeout(timer);
   }, [beforeCode, originalCode, modifiedCode, afterCode]);
 
   const handleEditorMount: DiffOnMount = (editorInstance, monaco) => {
-    // This section is how we theme and language set, as well as handle carriage returns
+    const compilerOptions = {
+      jsx: monaco.languages.typescript.JsxEmit.React,
+      jsxFactory: 'React.createElement',
+      reactNamespace: 'React',
+      allowNonTsExtensions: true
+    };
+
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions(compilerOptions);
+    monaco.languages.typescript.javascriptDefaults.setCompilerOptions(compilerOptions);
+
     monaco.editor.defineTheme("vs-light-plus", vsCodeLightPlus);
     monaco.editor.setTheme("vs-light-plus");
 
@@ -107,12 +124,8 @@ export function useDiffEditorSetup(
 
     const modifiedDecorations = modifiedEditor.createDecorationsCollection();
     const originalDecorations = originalEditor.createDecorationsCollection();
-    hoverDecorationsRef.current = modifiedEditor.createDecorationsCollection(
-      [],
-    );
+    hoverDecorationsRef.current = modifiedEditor.createDecorationsCollection([]);
 
-    // We update the decorations dynamically, decorations are the heart of how this works
-    // We use decorations to determine regions, enforce editability, and style our regions
     const updateDecorations = () => {
       const { start, end, originalEnd, afterLines } = boundariesRef.current;
 
@@ -128,7 +141,6 @@ export function useDiffEditorSetup(
       const newModifiedDecorations = [];
       const newOriginalDecorations = [];
 
-      // We attach dimming here (to distinguish between editable regions)
       if (start > 1) {
         const topRange = new monaco.Range(1, 1, start - 1, 1);
         newModifiedDecorations.push({ range: topRange, options: dimOptions });
@@ -146,7 +158,6 @@ export function useDiffEditorSetup(
         });
       }
 
-      // We add the modified content styling here
       if (end >= start) {
         newModifiedDecorations.push({
           range: new monaco.Range(start, 1, end, 1),
@@ -162,7 +173,6 @@ export function useDiffEditorSetup(
         });
       }
 
-      // We add the deleted content styling here
       if (originalEnd >= start) {
         newOriginalDecorations.push({
           range: new monaco.Range(start, 1, originalEnd, 1),
@@ -184,8 +194,6 @@ export function useDiffEditorSetup(
 
     updateDecorationsRef.current = updateDecorations;
 
-    // This is used to enforce region editability by toggling.
-    // This is the primary method to enforce editability rules
     modifiedEditor.onDidChangeCursorPosition((e) => {
       const currentLine = e.position.lineNumber;
       const { start, end } = boundariesRef.current;
@@ -197,8 +205,6 @@ export function useDiffEditorSetup(
       }
     });
 
-    // This is our second line of defense for editability.
-    // We check to make sure that no keydown is both crossing a section and modifing content
     modifiedEditor.onKeyDown((e) => {
       const { start, end } = boundariesRef.current;
       const selections = modifiedEditor.getSelections();
@@ -251,12 +257,11 @@ export function useDiffEditorSetup(
       }
     });
 
-    // On click, it will determine the new text content related to the regional change
-    // It then tells the parents the new code content of the regions
     const handleExpandRegionClick = (clickedLine: number) => {
       const newRegions = calculateExpandedRegions(
         clickedLine,
         latestPropsRef.current,
+        hasCarriageReturn
       );
       if (newRegions) {
         onCodeChange(
@@ -268,7 +273,6 @@ export function useDiffEditorSetup(
       }
     };
 
-    // This is the line gutter click handling, it expands the region
     modifiedEditor.onMouseDown((e) => {
       if (e.target.type === monaco.editor.MouseTargetType.GUTTER_LINE_NUMBERS) {
         const clickedLine = e.target.position?.lineNumber;
@@ -278,7 +282,6 @@ export function useDiffEditorSetup(
       }
     });
 
-    // This is the hover logic, this is used for region expansion styling
     modifiedEditor.onMouseMove((e) => {
       const target = e.target;
       const position = target.position;
@@ -305,7 +308,6 @@ export function useDiffEditorSetup(
               options: {
                 isWholeLine: true,
                 className: styles["monaco-hover-line-yellow"],
-                // This is the class we use to make the plus button you see in gutters
                 marginClassName: styles["monaco-expand-plus-btn"],
               },
             },
@@ -325,12 +327,12 @@ export function useDiffEditorSetup(
       }
     }
 
-    // This function handles model content change. It updates the bounds with the new line count
-    // It then fires the function to let the parent component know
-    modifiedEditor.onDidChangeModelContent(() => {
+    modifiedEditor.onDidChangeModelContent((e) => {
       const totalLines = modifiedEditor.getModel()?.getLineCount() || 0;
       boundariesRef.current.end = totalLines - boundariesRef.current.afterLines;
       updateDecorations();
+
+      if (e.isFlush) return;
 
       if (onCodeChange) {
         const model = modifiedEditor.getModel();
@@ -345,17 +347,22 @@ export function useDiffEditorSetup(
             );
           }
 
-          const { beforeCode, originalCode, afterCode } =
+          const { beforeCode, originalCode, afterCode, modifiedCode } =
             latestPropsRef.current;
-          onCodeChange(beforeCode, originalCode, extractedCode, afterCode);
+
+          if (extractedCode !== modifiedCode) {
+            onCodeChange(beforeCode, originalCode, extractedCode, afterCode);
+          }
         }
       }
     });
 
-    updateDecorations();
-    const startLine = boundariesRef.current.start;
     setTimeout(() => {
-      modifiedEditor.revealLineNearTop(startLine);
+      updateDecorations();
+      const startLine = boundariesRef.current.start;
+      setTimeout(() => {
+        modifiedEditor.revealLineNearTop(startLine);
+      }, 50);
     }, 50);
   };
 

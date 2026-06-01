@@ -4,6 +4,7 @@ import { Roboto, Roboto_Mono } from "next/font/google";
 import Providers from "./providers";
 import ToastMessage from "@components/ToastMessage/ToastMessage";
 
+import "@globals/styles/animations.css";
 import "@globals/styles/globals.css";
 import "@globals/styles/colors.css";
 import "@globals/styles/spacers.css";

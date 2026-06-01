@@ -4,11 +4,16 @@ import { useChangesViewMode } from "../../_hooks/useChangesViewMode";
 import { PublishedThreads } from "../../_hooks/usePublishedThreads";
 import { FileDiff } from "@/types/github.types";
 import { PullParams } from "@/types/routing.types";
-import { sortPublishedThreads } from "../../_utils/comment-utils";
+import {
+  buildThreadIndexMap,
+  buildThreadStatusMap,
+  sortPublishedThreads,
+} from "../../_utils/comment-utils";
 import Image from "next/image";
 import AlertBanner from "@components/AlertBanner/AlertBanner";
 import CancelButton from "@components/CancelButton/CancelButton";
 import CommentDiscussionIcon from "@/public/icons/comment_discussion.svg";
+import IconTooltip from "@components/IconTooltip/IconTooltip";
 import InlinePublishedThread from "../InlinePublishedThread/InlinePublishedThread";
 import TimelineDisplay from "../../../_components/TimelineDisplay/TimelineDisplay";
 import styles from "./ActivityPanel.module.css";
@@ -87,9 +92,17 @@ function CommentsTab({
     const lineThreads = [...byGroup.lineThreads.values()].flatMap(
       ({ left, right }) => [...left, ...right],
     );
-    return [...byGroup.fileThreads, ...lineThreads];
+    return [...byGroup.fileThreads, ...byGroup.outdatedThreads, ...lineThreads];
   });
-  sortPublishedThreads(allThreads, flatFileTree);
+
+  const threadIndexMap = buildThreadIndexMap(allThreads, flatFileTree);
+  const threadStatusMap = buildThreadStatusMap(allThreads, threadIndexMap);
+  sortPublishedThreads(
+    allThreads,
+    flatFileTree,
+    threadIndexMap,
+    threadStatusMap,
+  );
 
   return (
     <>
@@ -115,11 +128,20 @@ function CommentsTab({
           )}
           {allThreads.map((thread) => (
             <div key={`${thread.path}-${thread.id}`} className={styles.thread}>
-              <InlinePublishedThread thread={thread} viewType="panel" />
+              <InlinePublishedThread
+                thread={thread}
+                viewType="panel"
+                status={threadStatusMap.get(thread)}
+              />
             </div>
           ))}
         </>
       )}
+      <IconTooltip
+        id="thread-header-tooltip"
+        positionStrategy="fixed"
+        maxWidth={"225px"}
+      />
     </>
   );
 }

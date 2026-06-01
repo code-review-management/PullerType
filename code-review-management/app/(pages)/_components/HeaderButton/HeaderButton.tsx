@@ -25,12 +25,17 @@ export default function HeaderButton({
 }: {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   href?: string;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "tertiary";
   children: ReactNode;
   isDisabled?: boolean;
 }) {
-  const specialtyStyle =
-    variant === "secondary" ? styles.secondary : styles.primary;
+  let specialtyStyle: string = styles.primary;
+  if (variant === "secondary") {
+    specialtyStyle = styles.secondary;
+  }
+  else if (variant === "tertiary") {
+    specialtyStyle = styles.tertiary;
+  }
 
   if (onClick && !href) {
     return (

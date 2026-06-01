@@ -11,7 +11,6 @@ import InlineThreadList from "../_components/InlineThreadList/InlineThreadList";
  * For a given line in the file diff, group its published and draft threads by
  * side (left or right).
  *
- * @param filename: File associated with these threads.
  * @param change: `Change` object containing data about this line in the file diff.
  * @param publishedThreads: Published threads for this file, keyed by line number.
  * @param draftThreads: Draft threads for this file, keyed by draft thread key.
@@ -19,7 +18,6 @@ import InlineThreadList from "../_components/InlineThreadList/InlineThreadList";
  *           threads by left and right sides.
  */
 function getThreadsBySide(
-  filename: string,
   change: ChangeData,
   publishedThreads: PublishedThreadsByLine,
   draftThreads: DraftThreadsByLine,
@@ -79,7 +77,6 @@ function getThreadsBySide(
  * @returns: A record that maps change-keys to their corresponding thread list widgets.
  */
 export function getWidgets(
-  filename: string,
   hunks: HunkData[],
   publishedThreads: PublishedThreadsByLine,
   draftThreads: DraftThreadsByLine,
@@ -89,7 +86,7 @@ export function getWidgets(
 
   changes.forEach((change) => {
     const { published: publishedThreadsBySide, draft: draftThreadsBySide } =
-      getThreadsBySide(filename, change, publishedThreads, draftThreads);
+      getThreadsBySide(change, publishedThreads, draftThreads);
 
     const hasContent =
       publishedThreadsBySide.left.length > 0 ||
@@ -101,8 +98,7 @@ export function getWidgets(
       widgets[getChangeKey(change)] = InlineThreadList({
         change,
         publishedThreadsBySide,
-        draftThreadsBySide,
-        activePath: filename,
+        draftThreadsBySide
       });
     }
   });

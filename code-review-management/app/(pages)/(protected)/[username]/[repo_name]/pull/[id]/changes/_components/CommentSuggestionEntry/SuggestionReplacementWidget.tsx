@@ -1,7 +1,7 @@
-import React, { ReactNode, useMemo, Fragment, useState, useEffect } from 'react';
+import { ReactNode, useMemo, Fragment, useState } from 'react';
 import refractor from 'refractor';
 import { SuggestiveComment } from "./suggestionParser";
-import { IsSuggestionOutdated } from './suggestionValidator';
+import { isSuggestionOutdated } from './suggestionValidator';
 import { SuggestionModuleContent } from '../SuggestionModulePopup/SuggestionModulePopup';
 import styles from "./SuggestionReplacementWidget.module.css"
 import { getLanguage } from '../../_utils/diff-utils';
@@ -58,12 +58,11 @@ export function SuggestionReplacementWidget({ suggestion, activePath, startLine,
   const { username, repo_name, id } = useParams<PullParams>();
   const [activeTab, setActiveTab] = useState<'replace' | 'insert'>('insert');
   const [moduleExpanded, setModuleExpanded] = useState(false);
-  const [outdated, setOutdated] = useState(false);
 
   const deletionNodes = useMemo<ASTNode[]>(() => {
     try {
       return refractor.highlight(suggestion.deletionContent, language) as ASTNode[];
-    } catch (e) {
+    } catch {
       return [{ type: 'text', value: suggestion.deletionContent }];
     }
   }, [suggestion.deletionContent, language]);
@@ -71,7 +70,7 @@ export function SuggestionReplacementWidget({ suggestion, activePath, startLine,
   const additionNodes = useMemo<ASTNode[]>(() => {
     try {
       return refractor.highlight(suggestion.additionContent, language) as ASTNode[];
-    } catch (e) {
+    } catch {
       return [{ type: 'text', value: suggestion.additionContent }];
     }
   }, [suggestion.additionContent, language]);
@@ -88,11 +87,13 @@ export function SuggestionReplacementWidget({ suggestion, activePath, startLine,
   const adjustedStartLine = startLine + relativeStartLine - 1;
   const endLine: number = adjustedStartLine + deletionContent.split('\n').length;
 
-  useEffect(() => {
+  const outdated = useMemo(() => {
     if (isSuccess && fileContent) {
-      setOutdated(IsSuggestionOutdated(fileContent, suggestion.deletionContent, adjustedStartLine,));
+      return isSuggestionOutdated(fileContent, deletionContent, adjustedStartLine);
     }
-  }, [isSuccess, fileContent]);
+    return false;
+  }, [isSuccess, fileContent, deletionContent, adjustedStartLine]);
+
   return (
     <>
       {moduleExpanded && (
@@ -106,7 +107,6 @@ export function SuggestionReplacementWidget({ suggestion, activePath, startLine,
                 <div className={styles.notificationText}>Failed to load: {error?.message}</div>
               )}
 
-              {/* If NOT loading, NOT an error, and we have content, render the good state */}
               {!isLoading && !isError && fileContent && (
                 <SuggestionModuleContent
                   commentID={commentID}
@@ -130,15 +130,14 @@ export function SuggestionReplacementWidget({ suggestion, activePath, startLine,
 
       <div className={styles.container}>
 
-        {/* 2. The Formal Header with Toggle Buttons */}
         <div className={styles.formalHeader}>
           <div className={styles.headerTitle}>
             Suggested Change {(!suggestion.isCommited && !outdated) && "(AI can make mistakes)"}
           </div>
-          
+
           {suggestion.isCommited && (
             <div className={styles.commitedContainer}>
-              Commited
+              Committed
             </div>
           )}
 
@@ -174,20 +173,21 @@ export function SuggestionReplacementWidget({ suggestion, activePath, startLine,
           </div>
         </div>
 
-        {/* 3. Conditionally render based on the active tab */}
-        {activeTab === 'replace' ? (
-          <pre className={`${styles.codeText} ${styles.deletionText}`}>
-            <code>
-              {deletionNodes.map((node, i) => renderASTNode(node, i))}
-            </code>
-          </pre>
-        ) : (
-          <pre className={`${styles.codeText} ${styles.additionText}`}>
-            <code>
-              {additionNodes.map((node, i) => renderASTNode(node, i))}
-            </code>
-          </pre>
-        )}
+        <div className={styles.codeContainer}>
+          {activeTab === 'replace' ? (
+            <pre>
+              <code>
+                {deletionNodes.map((node, i) => renderASTNode(node, i))}
+              </code>
+            </pre>
+          ) : (
+            <pre>
+              <code>
+                {additionNodes.map((node, i) => renderASTNode(node, i))}
+              </code>
+            </pre>
+          )}
+        </div>
       </div>
     </>
   );

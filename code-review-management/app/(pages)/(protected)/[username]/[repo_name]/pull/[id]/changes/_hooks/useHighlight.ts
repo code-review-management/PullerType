@@ -66,8 +66,9 @@ export function useHighlight(
 
   const highlightEvents: DiffProps["gutterEvents"] = {
     // Starts a new highlight session when the user clicks on a gutter.
-    onMouseDown: ({ change, side }) => {
-      if (!change || !side) return;
+    onMouseDown: ({ change, side }, event) => {
+      // Only accept left-clicks.
+      if (!change || !side || event.button !== 0) return;
       highlightOnMouseDown(change, side, setActiveHighlightSync);
     },
     // Updates the highlighted lines as the user drags their mouse through the gutters.

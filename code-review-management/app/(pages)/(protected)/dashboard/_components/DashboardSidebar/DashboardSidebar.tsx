@@ -1,5 +1,5 @@
 import styles from "./DashboardSidebar.module.css";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import CollapsibleRepoList from "../CollapsibleRepoList/CollapsibleRepoList";
 import {
   getOrgSetFromRepoNameList,
@@ -8,7 +8,7 @@ import {
 import { useReposQuery } from "@/lib/api/queries/useReposQuery";
 import { useAutoFetchAllPages } from "@/lib/api/hooks/useAutoFetchAllPages";
 import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
-import { useLocalStorage } from "usehooks-ts";
+import { useIsMounted, useLocalStorage } from "usehooks-ts";
 import Image from "next/image";
 import ExpandIcon from "@/public/icons/expand.svg";
 import CollapseIcon from "@/public/icons/collapse.svg";
@@ -36,7 +36,13 @@ export default function DashboardSidebar({
     "expandedOwners",
     [],
   );
-  const [expansionState, setExpansionState] = useState<ExpansionState>("other");
+  const [expansionState, setExpansionState] = useLocalStorage<ExpansionState>(
+    "expansionState",
+    "other",
+  );
+
+  // Docs: https://usehooks-ts.com/react-hook/use-is-mounted
+  const isMounted = useIsMounted(); // Use to check if expansionState will have been loaded
 
   const mappedRepoList = sortReposByOrg(data || []);
   const repoSet = new Set(Array.isArray(selectedRepos) ? selectedRepos : []);
@@ -129,38 +135,40 @@ export default function DashboardSidebar({
       <div className={styles.sidebarContent}>
         <div className={styles.sidebarHeader}>
           <h4 className={styles.sidebarHeaderText}>REPOSITORIES</h4>
-          <div className={styles.reposActions}>
-            <button
-              className={`${styles.actionButton} ${expansionState === "expand" && styles.actionButtonActive}`}
-              onClick={() => toggleExpansionState("expand")}
-              data-tooltip-id="expand-all"
-              data-tooltip-content="Expand all"
-              data-tooltip-delay-show={100}
-              data-tooltip-place="bottom"
-            >
-              <Image
-                src={ExpandIcon}
-                alt="Expand"
-                className={styles.chevron}
-                height={24}
-              />
-            </button>
-            <button
-              className={`${styles.actionButton} ${expansionState === "collapse" && styles.actionButtonActive}`}
-              onClick={() => toggleExpansionState("collapse")}
-              data-tooltip-id="collapse-all"
-              data-tooltip-content="Collapse all"
-              data-tooltip-delay-show={100}
-              data-tooltip-place="bottom"
-            >
-              <Image
-                src={CollapseIcon}
-                alt="Collapse"
-                className={styles.chevron}
-                height={24}
-              />
-            </button>
-          </div>
+          {isMounted() && (
+            <div className={styles.reposActions}>
+              <button
+                className={`${styles.actionButton} ${expansionState === "expand" ? styles.actionButtonActive : ""}`}
+                onClick={() => toggleExpansionState("expand")}
+                data-tooltip-id="expand-all"
+                data-tooltip-content="Expand all"
+                data-tooltip-delay-show={100}
+                data-tooltip-place="bottom"
+              >
+                <Image
+                  src={ExpandIcon}
+                  alt="Expand"
+                  className={styles.chevron}
+                  height={24}
+                />
+              </button>
+              <button
+                className={`${styles.actionButton} ${expansionState === "collapse" && styles.actionButtonActive}`}
+                onClick={() => toggleExpansionState("collapse")}
+                data-tooltip-id="collapse-all"
+                data-tooltip-content="Collapse all"
+                data-tooltip-delay-show={100}
+                data-tooltip-place="bottom"
+              >
+                <Image
+                  src={CollapseIcon}
+                  alt="Collapse"
+                  className={styles.chevron}
+                  height={24}
+                />
+              </button>
+            </div>
+          )}
         </div>
         {Array.from(mappedRepoList.keys()).map((owner: string) => (
           <CollapsibleRepoList

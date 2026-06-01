@@ -5,10 +5,12 @@
     max-height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
+    overscroll-behavior: contain;
 
     position: sticky;
     top: 0;
-    /* TODO: Make activity panel resizable. */
+    z-index: 110;
+
     width: 350px;
     border-left: var(--border-normal-width) solid var(--border-gray);
 
@@ -47,14 +49,16 @@
 .tab {
     display: flex;
     justify-content: center;
+    align-items: center;
     flex: 1;
 
-    padding-bottom: var(--spacer-10);
+    height: calc(var(--page-header-height) - var(--spacer-12));
+    padding-bottom: var(--spacer-12);
     border-bottom: var(--border-thick-width) solid transparent;
 
     cursor: pointer;
     color: var(--text-secondary);
-    font-weight: 450;
+    font-weight: 500;
 }
 
 .activeTab {
@@ -64,7 +68,7 @@
 }
 
 .close {
-    margin-top: var(--spacer-2);
+    margin-top: var(--spacer-6);
 }
 
 .body {
@@ -92,4 +96,15 @@
 
 .timeline :not(:global(.tiptap *)) {
     font-size: var(--font-size-diff-code);
+}
+
+@media screen and (max-width: 800px) {
+    .panelWrapper,
+    .panel {
+        width: 100%;
+    }
+
+    .panelWrapperClosed {
+        width: 0;
+    }
 }

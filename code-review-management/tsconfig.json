@@ -21,7 +21,9 @@
     "paths": {
       "@/*": ["./*"],
       "@components/*": ["./app/(pages)/_components/*"],
-      "@globals/*": ["./app/(pages)/_globals/*"]
+      "@globals/*": ["./app/(pages)/_globals/*"],
+      "@lib/*": ["./lib/*"],
+      "@merge-conflict/*": ["./app/api/v1/[owner]/[repo]/pulls/[pull_number]/conflicts/*"]
     },
     "types": ["node", "jest"]
   },

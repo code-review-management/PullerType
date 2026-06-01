@@ -109,14 +109,12 @@ export default memo(function FileDiffView({
   const widgets = useMemo(() => {
     if (isCommitView) return;
     return getWidgets(
-      activePath,
       hunks,
       publishedThreads.lineThreads,
       draftThreadsByLine ?? {},
     );
   }, [
     isCommitView,
-    activePath,
     hunks,
     publishedThreads.lineThreads,
     draftThreadsByLine,
@@ -166,7 +164,6 @@ export default memo(function FileDiffView({
           {hasFileLevelThreads && !isCommitView && (
             <ThreadList
               publishedThreads={publishedThreads.fileThreads}
-              activePath={activePath}
               draftThread={draftThreadsByLine?.["file-level"]}
             />
           )}

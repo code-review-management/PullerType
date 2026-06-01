@@ -8,9 +8,7 @@ import GitHub from "next-auth/providers/github";
  */
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [GitHub({
-    issuer: "https://github.com/login/oauth"
-  })],
+  providers: [GitHub],
   pages: {
     signIn: "/sign-in",
   },
