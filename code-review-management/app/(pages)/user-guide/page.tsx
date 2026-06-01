@@ -17,8 +17,9 @@ export default function UserGuide() {
     <div className={styles.page}>
       <Header />
       <div className={styles.pageContent}>
+        <h1>User Guide</h1>
         <div className={styles.preface}>
-          <h1>Preface</h1>
+          <h2>Preface</h2>
           <p>
             PullerType is a comprehensive code review management platform that
             enhances the process of peer-reviewing code (code reviews).
@@ -43,8 +44,8 @@ export default function UserGuide() {
           </p>
         </div>
         <div className={styles.usage}>
-          <h1>Usage</h1>
-          <h2>Get Started</h2>
+          <h2>Usage</h2>
+          <h3>Get Started</h3>
           <ol>
             <li>
               If you want to use the app on your personal repositories, follow
@@ -85,7 +86,7 @@ export default function UserGuide() {
           </ol>
         </div>
         <div className={styles.functionalities}>
-          <h1>Functionalities</h1>
+          <h2>Features</h2>
           <p>
             Our product supports the following core features to perform a code
             review and sync to GitHub:
@@ -118,8 +119,8 @@ export default function UserGuide() {
               suggestions, and commit the suggestion into the target region.
             </li>
           </ul>
-          <h2>Functionalities</h2>
-          <h3>Dashboard repo filters</h3>
+          <h3>Functionalities</h3>
+          <h4>Dashboard repo filters</h4>
           <div className={styles.imageWrapper}>
             <Image
               src={DashboardRepoFiltersScreenshot}
@@ -142,7 +143,7 @@ export default function UserGuide() {
               from only selected repositories.
             </li>
           </ol>
-          <h3>Dashboard tab filters</h3>
+          <h4>Dashboard tab filters</h4>
           <div className={styles.imageWrapper}>
             <Image
               src={DashboardTabFiltersScreenshot}
@@ -154,7 +155,7 @@ export default function UserGuide() {
             Note that there might be some loading time for the pull requests to
             populate when you first select a filter.
           </p>
-          <h3>Pull request header</h3>
+          <h4>Pull request header</h4>
           <div className={styles.headerImageWrapper}>
             <Image
               src={PullRequestHeaderScreenshot}
@@ -183,7 +184,7 @@ export default function UserGuide() {
               page.
             </li>
           </ol>
-          <h3>Pull request page</h3>
+          <h4>Pull request page</h4>
           <div className={styles.imageWrapper}>
             <Image
               src={PullRequestPageScreenshot}
@@ -205,7 +206,7 @@ export default function UserGuide() {
               commit.
             </li>
           </ol>
-          <h3>Diff-view page</h3>
+          <h4>Diff-view page</h4>
           <div className={styles.imageWrapper}>
             <Image
               src={DiffViewPageScreenshot}
@@ -296,7 +297,7 @@ export default function UserGuide() {
               </ol>
             </li>
           </ol>
-          <h3>3 Window Merge Editor</h3>
+          <h4>3 Window Merge Editor</h4>
           <p>
             To access this page, open a PR with a merge conflict. You will
             notice that the button that usually says “Merge” will now say
@@ -373,7 +374,7 @@ export default function UserGuide() {
               </ol>
             </li>
           </ol>
-          <h3>Gemini Suggestions</h3>
+          <h4>Gemini Suggestions</h4>
           <div className={styles.imageWrapper}>
             <Image
               src={GeminiSuggestionRenderedScreenshot}

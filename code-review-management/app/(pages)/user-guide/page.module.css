@@ -18,6 +18,10 @@
   gap: var(--spacer-20);
 }
 
+.pageContent a {
+    color: var(--color-interactive);
+}
+
 .pageContent ol,
 .pageContent ul {
   margin-left: var(--spacer-40);
