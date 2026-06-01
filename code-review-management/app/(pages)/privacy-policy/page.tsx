@@ -25,12 +25,12 @@ export default function PrivacyPolicy() {
             automatically terminated.
           </p>
           <p>
-            Our product also takes advantage of Google Gemini to provide
-            suggestions to file content based on review comments. This means a
-            portion of our entire files are sent through Google&apos;s public
-            Gemini API to generate suggestions. Users are warned that responses
-            may not be accurate and their implicit consent to data sharing when
-            they click the Gemini Suggest button.
+            Our product also uses Google Gemini to provide suggestions to file
+            content based on review comments. If the user utilizes this feature,
+            a portion of their files is sent through Google&apos;s public Gemini
+            API to generate suggestions. Users are warned that responses may not
+            be accurate and grant their implicit consent to data sharing when
+            they click the Gemini suggest button.
           </p>
         </div>
       </div>
