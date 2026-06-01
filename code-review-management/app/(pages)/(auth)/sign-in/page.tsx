@@ -31,8 +31,7 @@ export default function SignIn() {
         </form>
         <p className={styles.notice}>
           By signing up, you acknowledge that you read and agree to our{" "}
-          {/* TODO: Replace link with privacy policy. */}
-          <Link className={styles.link} href="/">
+          <Link className={styles.link} href="/privacy-policy">
             Privacy Policy
           </Link>
           .
