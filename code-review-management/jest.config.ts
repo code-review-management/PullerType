@@ -13,7 +13,7 @@ const config: Config = {
   coveragePathIgnorePatterns: ["mocks", "node_modules"],
   coverageDirectory: "coverage",
   coverageProvider: "v8",
-  testEnvironment: "jest-environment-jsdom",
+  testEnvironment: "./lib/jsdom-environment.ts",
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
     "^@components/(.*)$": "<rootDir>/app/(pages)/_components/$1",
