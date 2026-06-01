@@ -48,14 +48,16 @@ export default function UserGuide() {
           <ol>
             <li>
               If you want to use the app on your personal repositories, follow
-              this link to install the GitHub app:
-              https://github.com/apps/code-review-management/installations/select_target{" "}
+              this link to install the GitHub app:{" "}
+              <a href="https://github.com/apps/code-review-management/installations/select_target">
+                https://github.com/apps/code-review-management/installations/select_target
+              </a>
             </li>
             <li>
-              <em>
+              <strong>
                 The GitHub app is required to view private repos or make any
                 write requests using our app.
-              </em>
+              </strong>
             </li>
             <li>
               Go to our app with this link:
@@ -118,10 +120,14 @@ export default function UserGuide() {
           </ul>
           <h2>Functionalities</h2>
           <h3>Dashboard repo filters</h3>
-          <Image
-            src={DashboardRepoFiltersScreenshot}
-            alt="Screenshot of dashboard repo filter feature"
-          />
+          <div className={styles.imageWrapper}>
+            <Image
+              src={DashboardRepoFiltersScreenshot}
+              alt="Screenshot of dashboard repo filter feature"
+              fill
+              className={styles.image}
+            />
+          </div>
           <p>
             Each collapsed category represents a user or organization with
             repositories under its ownership.
@@ -137,20 +143,26 @@ export default function UserGuide() {
             </li>
           </ol>
           <h3>Dashboard tab filters</h3>
-          <Image
-            src={DashboardTabFiltersScreenshot}
-            alt="Screenshot of dashboard tab filter feature"
-          />
+          <div className={styles.imageWrapper}>
+            <Image
+              src={DashboardTabFiltersScreenshot}
+              alt="Screenshot of dashboard tab filter feature"
+            />
+          </div>
           <p>
             Try out the different filter options that run above the search bar.
             Note that there might be some loading time for the pull requests to
             populate when you first select a filter.
           </p>
           <h3>Pull request header</h3>
-          <Image
-            src={PullRequestHeaderScreenshot}
-            alt="Screenshot of pull request header screenshot"
-          />
+          <div className={styles.headerImageWrapper}>
+            <Image
+              src={PullRequestHeaderScreenshot}
+              alt="Screenshot of pull request header screenshot"
+              fill
+              className={styles.image}
+            />
+          </div>
           <p>
             This header is displayed on the PR view page and the diff-view page.
           </p>
@@ -172,10 +184,14 @@ export default function UserGuide() {
             </li>
           </ol>
           <h3>Pull request page</h3>
-          <Image
-            src={PullRequestPageScreenshot}
-            alt="Screenshot of pull request page"
-          />
+          <div className={styles.imageWrapper}>
+            <Image
+              src={PullRequestPageScreenshot}
+              alt="Screenshot of pull request page"
+              fill
+              className={styles.image}
+            />
+          </div>
           <ol>
             <li>Click on the branch names to copy them to clipboard.</li>
             <li>
@@ -190,13 +206,17 @@ export default function UserGuide() {
             </li>
           </ol>
           <h3>Diff-view page</h3>
-          <Image
-            src={DiffViewPageScreenshot}
-            alt="Screenshot of diff-view page"
-          />
+          <div className={styles.imageWrapper}>
+            <Image
+              src={DiffViewPageScreenshot}
+              alt="Screenshot of diff-view page"
+              fill
+              className={styles.image}
+            />
+          </div>
           <ol>
             <li>
-              Comments
+              <p>Comments</p>
               <ol>
                 <li>
                   To leave an inline comment on a diff, click and drag across
@@ -219,7 +239,7 @@ export default function UserGuide() {
               </ol>
             </li>
             <li>
-              Side panel
+              <p>Side panel</p>
               <ol>
                 <li>
                   To open the side panel, click the discussion icon on the top
@@ -235,7 +255,7 @@ export default function UserGuide() {
               </ol>
             </li>
             <li>
-              File-tree
+              <p>File-tree</p>
               <ol>
                 <li>
                   Click on a file in the file-tree to automatically scroll to
@@ -251,7 +271,7 @@ export default function UserGuide() {
               </ol>
             </li>
             <li>
-              File-diff header
+              <p>File-diff header</p>
               <ol>
                 <li>
                   Copy a filename to your clipboard by clicking the path in the
@@ -264,7 +284,7 @@ export default function UserGuide() {
               </ol>
             </li>
             <li>
-              Commit-viewing feature
+              <p>Commit-viewing feature</p>
               <ol>
                 <li>
                   Click the commit symbol in the header to view the list of all
@@ -285,7 +305,7 @@ export default function UserGuide() {
           </p>
           <ol>
             <li>
-              Tab-based file selection:{" "}
+              <p>Tab-based file selection:</p>
               <ol>
                 <li>
                   The top of the file contains a head bar that depicts the name
@@ -297,7 +317,7 @@ export default function UserGuide() {
               </ol>
             </li>
             <li>
-              Window View:
+              <p>Window View:</p>
               <ol>
                 <li>
                   There are 3 windows. The top left is the incoming content (the
@@ -313,7 +333,7 @@ export default function UserGuide() {
               </ol>
             </li>
             <li>
-              Conflict Regions{" "}
+              <p>Conflict Regions</p>
               <ol>
                 <li>
                   Each file contains at least one conflict region. The conflict
@@ -334,7 +354,7 @@ export default function UserGuide() {
               </ol>
             </li>
             <li>
-              Merge Button{" "}
+              <p>Merge Button</p>
               <ol>
                 <li>
                   Once a user is satisfied, clicking the merge button will write
@@ -354,14 +374,22 @@ export default function UserGuide() {
             </li>
           </ol>
           <h3>Gemini Suggestions</h3>
-          <Image
-            src={GeminiSuggestionRenderedScreenshot}
-            alt="Screenshot of rendered Gemini suggestion"
-          />
-          <Image
-            src={GeminiSuggestionExpandedScreenshot}
-            alt="Screenshot of expanded Gemini suggestion"
-          />
+          <div className={styles.imageWrapper}>
+            <Image
+              src={GeminiSuggestionRenderedScreenshot}
+              alt="Screenshot of rendered Gemini suggestion"
+              fill
+              className={styles.image}
+            />
+          </div>
+          <div className={styles.imageWrapper}>
+            <Image
+              src={GeminiSuggestionExpandedScreenshot}
+              alt="Screenshot of expanded Gemini suggestion"
+              fill
+              className={styles.image}
+            />
+          </div>
           <p>
             When a comment is left on the right side of a diff, you have the
             option to let Gemini generate a suggestion to address the comment.
