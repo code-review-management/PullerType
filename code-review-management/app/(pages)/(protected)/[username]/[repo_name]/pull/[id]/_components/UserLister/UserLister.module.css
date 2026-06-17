@@ -10,15 +10,16 @@
   align-items: center;
 }
 
-.iconWrapper {
+.popoverButton {
   width: 20px;
   height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
 
-.plusIcon {
+  border: none;
+  background: none;
+  padding: none;
   cursor: pointer;
 }
 

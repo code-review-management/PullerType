@@ -35,6 +35,6 @@ export default function Reviewers({
   const reviewers = buildReviewerList(requested_reviewers, reviews || []);
 
   return (
-    <UserLister listType={"reviewers"} userList={reviewers} editable={false} />
+    <UserLister listType={"reviewers"} userList={reviewers} editable />
   );
 }

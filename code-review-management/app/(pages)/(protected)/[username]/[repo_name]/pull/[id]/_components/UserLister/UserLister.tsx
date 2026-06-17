@@ -4,6 +4,9 @@ import UserIcon from "@/app/(pages)/_components/UserIcon/UserIcon";
 import Subheader from "../Subheader/Subheader";
 import { getListedUserIcon, listedUser } from "../../_utils/userlist-utils";
 import { usePermissionChecks } from "../../_hooks/usePermissionChecks";
+import { useState } from "react";
+import UserListerPopover from "../UserListerPopover/UserListerPopover";
+import { Popover } from "react-tiny-popover";
 
 export type UserListType = "reviewers" | "assignees";
 
@@ -72,6 +75,7 @@ export default function UserLister({
   editable: boolean;
 }) {
   const { hasWritePermission } = usePermissionChecks();
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const headerDisplay = `${listType[0].toUpperCase()}${listType.slice(1)}`;
 
   return (
@@ -79,15 +83,26 @@ export default function UserLister({
       <div className={styles.headerRow}>
         <Subheader>{headerDisplay}</Subheader>
         {hasWritePermission && editable && (
-          <div className={styles.iconWrapper}>
-            <Image
-              className={styles.plusIcon}
-              src="/icons/plus.svg"
-              alt="Plus icon"
-              height={12}
-              width={12}
-            />
-          </div>
+          <Popover
+            isOpen={isPopoverOpen}
+            content={<UserListerPopover />}
+            positions={["bottom"]}
+            containerClassName={styles.iconWrapper}
+            onClickOutside={() => setIsPopoverOpen(false)}
+          >
+            <button
+              onClick={() => setIsPopoverOpen((prev) => !prev)}
+              className={styles.popoverButton}
+            >
+              <Image
+                className={styles.plusIcon}
+                src="/icons/plus.svg"
+                alt="Plus icon"
+                height={12}
+                width={12}
+              />
+            </button>
+          </Popover>
         )}
       </div>
       <div className={styles.listedUsers}>
